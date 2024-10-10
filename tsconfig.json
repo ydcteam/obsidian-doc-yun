@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"sourceMap": false,
+		"module": "esnext",
+		"target": "esnext",
+		"allowJs": false,
+		"noImplicitAny": true,
+		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"importHelpers": true,
+		"resolveJsonModule": true,
+		"lib": ["dom", "scripthost", "es2022", "DOM.Iterable"],
+		"jsx": "react",
+		"skipLibCheck": true,
+		"paths": {
+			"@/*": ["./src/*"],
+			"@@/*": ["./*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
+}

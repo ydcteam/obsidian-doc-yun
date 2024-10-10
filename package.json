@@ -1,0 +1,72 @@
+{
+	"name": "yidong-cloud-obsidian-doc-plugin",
+	"version": "1.4.1",
+	"description": "Yidong Cloud Document Obsidian publish plugin.",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"files": [
+		"lib/**/*"
+	],
+	"type": "module",
+	"scripts": {
+		"dev": "cross-env NODE_ENV=development MODE=yun rollup --config rollup.config.js",
+		"build": "cross-env NODE_ENV=production MODE=yun rollup --config rollup.config.js"
+	},
+	"private": "true",
+	"keywords": [],
+	"author": "authors@ydc.show",
+	"dependencies": {
+		"axios": "^1.7.7",
+		"clsx": "^2.1.1",
+		"cssnano": "^7.0.6",
+		"echarts": "^5.5.1",
+		"js-base64": "^3.7.7",
+		"js-yaml": "^4.1.0",
+		"lodash": "^4.17.21",
+		"lucide": "^0.441.0",
+		"lucide-react": "^0.263.1",
+		"postcss": "^8.4.45",
+		"qs": "^6.13.0",
+		"rollup-plugin-postcss": "^4.0.2",
+		"spark-md5": "^3.0.2"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.22.9",
+		"@babel/preset-env": "^7.22.10",
+		"@babel/preset-react": "^7.22.5",
+		"@codemirror/commands": "^6.3.3",
+		"@codemirror/language": "^6.10.0",
+		"@codemirror/search": "^6.5.5",
+		"@codemirror/state": "^6.4.0",
+		"@codemirror/view": "^6.23.0",
+		"@rollup/plugin-babel": "^6.0.3",
+		"@rollup/plugin-commonjs": "^26.0.1",
+		"@rollup/plugin-node-resolve": "^15.2.3",
+		"@rollup/plugin-replace": "^5.0.2",
+		"@rollup/plugin-typescript": "^11.1.6",
+		"@types/crypto-js": "^4.2.2",
+		"@types/js-beautify": "^1.14.0",
+		"@types/js-yaml": "^4.0.9",
+		"@types/lodash": "^4.17.7",
+		"@types/node": "^20.10.5",
+		"@types/qs": "^6.9.15",
+		"@types/react": "^18.2.45",
+		"@types/react-dom": "^18.2.18",
+		"@types/spark-md5": "^3.0.4",
+		"cross-env": "^7.0.3",
+		"dotenv": "^16.4.5",
+		"obsidian": "1.5.7-1",
+		"prettier": "^3.0.1",
+		"rollup": "^3.29.1",
+		"rollup-plugin-copy": "^3.5.0",
+		"rollup-plugin-inject-process-env": "^1.3.1",
+		"rollup-plugin-terser": "^7.0.2",
+		"sass": "^1.78.0",
+		"tslib": "^2.6.1",
+		"typescript": "^5.2.2"
+	},
+	"volta": {
+		"node": "20.17.0",
+		"yarn": "1.22.22"
+	}
+}

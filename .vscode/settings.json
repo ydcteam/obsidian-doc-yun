@@ -1,0 +1,26 @@
+{
+	"cSpell.words": [
+		"antd",
+		"attachs",
+		"Attah",
+		"buildadmin",
+		"clsx",
+		"cssnano",
+		"Echarts",
+		"errcode",
+		"excalidraw",
+		"gitea",
+		"interv",
+		"Linkpath",
+		"lucide",
+		"markmap",
+		"postbuild",
+		"softprops",
+		"ydcurl",
+		"yidong"
+	],
+	"files.associations": {
+		"*.SAAS": "makefile",
+		"*.YUN": "makefile"
+	}
+}
