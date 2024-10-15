@@ -1,7 +1,7 @@
-import { createHmac, createHash, BinaryLike } from "crypto";
 import moment from "moment";
 import { toString } from "lodash";
 import { stringify as qsStringify } from "qs";
+import { sha256Hash, hmacSign, BinaryLike } from "./crypto";
 
 export type AuthOptions = {
 	apiKey: string;
@@ -81,43 +81,44 @@ export class Auth {
 		return lowercaseHeader;
 	}
 
-	getStringToSign(date: string, canonicalRequest: any) {
+	async getStringToSign(date: string, canonicalRequest: any): Promise<string> {
+		const requestHash = await sha256Hash(canonicalRequest);
 		const stringToSign = [
 			"YDC4-HMAC-SHA256",
 			date, // TimeStamp
 			`${date.split(" ")[0]}/doc/ydc_v4_request`, // Scope
-			createHash("sha256").update(canonicalRequest).digest("hex"), // Hashed Canonical Request
+			requestHash, // Hashed Canonical Request
 		];
 
 		return stringToSign.join("\n");
 	}
 
-	getSignature(accessKeySecret: string, date: string, stringToSign: string) {
-		const signingKey = createHmac("sha256", `ydc_v4_${accessKeySecret}`)
-			.update(date)
-			.digest("hex");
+	async getSignature(
+		accessKeySecret: string,
+		date: string,
+		stringToSign: string,
+	): Promise<string> {
+		const signingKey = await hmacSign(`ydc_v4_${accessKeySecret}`, date);
 		if (this.debug) {
 			console.debug(`signingKey:\n[${signingKey}]`);
 		}
-		const signatureValue = createHmac("sha256", signingKey)
-			.update(stringToSign)
-			.digest("hex");
+		const signatureValue = await hmacSign(signingKey, stringToSign);
 
 		return signatureValue;
 	}
 
-	getSha256HashHex(data: BinaryLike) {
-		const hs = createHash("sha256").update(data).digest("hex");
+	async getSha256HashHex(data: BinaryLike): Promise<string> {
+		const hs = await sha256Hash(data);
 		if (this.debug) {
 			console.debug(`getSha256HashHex:\n[${hs}]`);
 		}
 		return hs;
 	}
 
-	authorization(
+	async authorization(
 		method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS",
 		request: AuthParam,
-	) {
+	): Promise<string> {
 		const fixedHeaders: { [key: string]: any } = {};
 		for (const v in request.headers) {
 			fixedHeaders[v] =
@@ -135,12 +136,12 @@ export class Auth {
 		if (this.debug) {
 			console.debug("canonicalRequest:\n", canonicalRequest);
 		}
-		const stringToSign = this.getStringToSign(date, canonicalRequest);
+		const stringToSign = await this.getStringToSign(date, canonicalRequest);
 		if (this.debug) {
 			console.debug(`stringToSign:\n[${stringToSign}]`);
 		}
 		const onlyDate = date.split(" ")[0];
-		const signatureValue = this.getSignature(
+		const signatureValue = await this.getSignature(
 			this.options.apiSecret,
 			onlyDate,
 			stringToSign,

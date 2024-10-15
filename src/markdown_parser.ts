@@ -3,7 +3,7 @@ import { notify } from "@/utils";
 import {
 	AttachConfig,
 	CheckAttachmentResult,
-	PostAttachUploadData,
+	PublishDocumentAttachData,
 } from "@/http";
 import { App, TFile, getLinkpath } from "obsidian";
 import * as SparkMD5 from "spark-md5";
@@ -20,7 +20,7 @@ export interface Assets {
 export interface ConvertLinkResult {
 	content: string;
 	attachKeys?: number[]; // 已上传的.
-	attachs?: PostAttachUploadData[]; // 带上传的.
+	attachs?: PublishDocumentAttachData[]; // 带上传的.
 }
 
 export type AttachChecker = (data: {

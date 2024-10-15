@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"name": "YidongCloud Publish",
-	"description": "易东云在线文档发布插件，提供发布文档到易东云的能力",
+	"description": "Publish your notes to YidongCloud platform.",
 	"author": "YDC 易东云网络",
 	"authorUrl": "https://web.ydc.show",
 	"isDesktopOnly": false

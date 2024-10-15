@@ -5,7 +5,7 @@ import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 
-export interface PostDocumentData {
+export interface RenameDocumentData {
 	file: string;
 	fileName: string;
 	oldFileName?: string;
@@ -19,17 +19,17 @@ export interface RemoveDocumentData {
 	vault: string;
 }
 
-export interface PostAttachUploadData {
+export interface PublishDocumentAttachData {
 	buf: ArrayBuffer;
 	filename: string;
 }
 
-export interface PostDocumentWithAttachData {
+export interface PublishDocumentData {
 	content: string;
 	fileName: string;
 	isPublic?: 1 | 0;
 	vault: string;
-	attachs?: PostAttachUploadData[];
+	attachs?: PublishDocumentAttachData[];
 	attachsUploaded?: number[];
 }
 
@@ -113,7 +113,7 @@ export class Http {
 				},
 			};
 
-			const auth = this.auth.authorization("POST", params);
+			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
@@ -159,7 +159,7 @@ export class Http {
 				},
 			};
 
-			const auth = this.auth.authorization("GET", params);
+			const auth = await this.auth.authorization("GET", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.get(
@@ -264,10 +264,10 @@ export class Http {
 				},
 			};
 
-			params.headers["x-doc-content-sha256"] = this.auth.getSha256HashHex(
+			params.headers["x-doc-content-sha256"] = await this.auth.getSha256HashHex(
 				this.stringifyFormData(form),
 			);
-			const auth = this.auth.authorization("POST", params);
+			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
@@ -308,9 +308,7 @@ export class Http {
 	 * @param data 数据
 	 * @returns Promise<boolean>
 	 */
-	publishDocument = async (
-		data: PostDocumentWithAttachData,
-	): Promise<boolean> => {
+	publishDocument = async (data: PublishDocumentData): Promise<boolean> => {
 		try {
 			let form = new FormData();
 			form.append("content", data.content);
@@ -333,7 +331,7 @@ export class Http {
 			}
 
 			// 请求载荷哈希计算时不包括附件.
-			params.headers["x-doc-content-sha256"] = this.auth.getSha256HashHex(
+			params.headers["x-doc-content-sha256"] = await this.auth.getSha256HashHex(
 				this.stringifyFormData(form),
 			);
 
@@ -343,7 +341,7 @@ export class Http {
 				}
 			}
 
-			const auth = this.auth.authorization("POST", params);
+			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
@@ -352,7 +350,7 @@ export class Http {
 				params,
 			);
 			if (this.isDebug()) {
-				console.debug("postDocumentWithAttach 请求结果:", rsp);
+				console.debug("publishDocument 请求结果:", rsp);
 			}
 
 			const result = this.chkRsp(rsp);
@@ -364,7 +362,7 @@ export class Http {
 			notify(undefined, `文档 ${data.fileName} 发布成功`);
 			return true;
 		} catch (error) {
-			console.error("postDocumentWithAttach error:", error);
+			console.error("publishDocument error:", error);
 			if (error.response) {
 				notify(
 					undefined,
@@ -381,23 +379,10 @@ export class Http {
 	/**
 	 * 文档重命名.
 	 *
-	 * @param data PostDocumentData
+	 * @param data RenameDocumentData
 	 * @returns Promise<boolean>
 	 */
-	renameDocument = async (data: PostDocumentData): Promise<boolean> => {
-		return this.postDocument(
-			this.config.settings.getEntrypointUrl("rename"),
-			data,
-		);
-	};
-
-	/**
-	 * 删除文档.
-	 *
-	 * @param data RemoveDocumentData 数据
-	 * @returns Promise<boolean>
-	 */
-	removeDocument = async (data: RemoveDocumentData): Promise<boolean> => {
+	renameDocument = async (data: RenameDocumentData): Promise<boolean> => {
 		try {
 			const params: AuthParam = {
 				headers: {
@@ -408,74 +393,17 @@ export class Http {
 				},
 			};
 
-			params.headers["x-doc-content-sha256"] = this.auth.getSha256HashHex(
+			params.headers["x-doc-content-sha256"] = await this.auth.getSha256HashHex(
 				JSON.stringify(data),
 			);
-			const auth = this.auth.authorization("POST", params);
+			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
-				this.config.settings.getEntrypointUrl("remove"),
+				this.config.settings.getEntrypointUrl("rename"),
 				data,
 				params,
 			);
-			if (this.isDebug()) {
-				console.debug("移除文档请求结果:", rsp);
-			}
-
-			const result = this.chkRsp(rsp);
-			if (result.code != 0) {
-				notify(undefined, `文档 ${data.fileName} 删除失败: ${result.msg}`);
-				return false;
-			}
-
-			notify(undefined, `文档 ${data.fileName} 删除成功`);
-			return true;
-		} catch (error) {
-			console.error("removeDocument error:", error);
-			if (error.response) {
-				notify(
-					undefined,
-					`文档 ${data.fileName} 删除失败: ${error.response.data?.msg}`,
-				);
-				return false;
-			}
-
-			notify(undefined, `文档 ${data.fileName} 删除失败`);
-			return false;
-		}
-	};
-
-	/**
-	 * 文档post.
-	 *
-	 * @param url 请求地址
-	 * @param token Token
-	 * @param appId APPID
-	 * @param data PostDocumentData 数据
-	 * @returns Promise<boolean>
-	 */
-	postDocument = async (
-		url: string,
-		data: PostDocumentData,
-	): Promise<boolean> => {
-		try {
-			const params: AuthParam = {
-				headers: {
-					"Content-Type": "multipart/form-data",
-					"X-Requested-With": "XMLHttpRequest",
-					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
-				},
-			};
-
-			params.headers["x-doc-content-sha256"] = this.auth.getSha256HashHex(
-				JSON.stringify(data),
-			);
-			const auth = this.auth.authorization("POST", params);
-			params.headers["Authorization"] = auth;
-
-			const rsp = await axios.post(url, data, params);
 			if (this.isDebug()) {
 				console.debug("发布请求结果:", rsp);
 			}
@@ -489,7 +417,7 @@ export class Http {
 			notify(undefined, `文档 ${data.fileName} 发布成功`);
 			return true;
 		} catch (error) {
-			console.error("postDocument error:", error);
+			console.error("renameDocument error:", error);
 			if (error.response) {
 				notify(
 					undefined,
@@ -524,5 +452,60 @@ export class Http {
 			code: 0,
 			msg: "ok",
 		};
+	};
+
+	/**
+	 * 删除文档.
+	 *
+	 * @param data RemoveDocumentData 数据
+	 * @returns Promise<boolean>
+	 */
+	removeDocument = async (data: RemoveDocumentData): Promise<boolean> => {
+		try {
+			const params: AuthParam = {
+				headers: {
+					"Content-Type": "multipart/form-data",
+					"X-Requested-With": "XMLHttpRequest",
+					"request-app": this.config.settings.ydcAppId,
+					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+				},
+			};
+
+			params.headers["x-doc-content-sha256"] = await this.auth.getSha256HashHex(
+				JSON.stringify(data),
+			);
+			const auth = await this.auth.authorization("POST", params);
+			params.headers["Authorization"] = auth;
+
+			const rsp = await axios.post(
+				this.config.settings.getEntrypointUrl("remove"),
+				data,
+				params,
+			);
+			if (this.isDebug()) {
+				console.debug("移除文档请求结果:", rsp);
+			}
+
+			const result = this.chkRsp(rsp);
+			if (result.code != 0) {
+				notify(undefined, `文档 ${data.fileName} 删除失败: ${result.msg}`);
+				return false;
+			}
+
+			notify(undefined, `文档 ${data.fileName} 删除成功`);
+			return true;
+		} catch (error) {
+			console.error("removeDocument error:", error);
+			if (error.response) {
+				notify(
+					undefined,
+					`文档 ${data.fileName} 删除失败: ${error.response.data?.msg}`,
+				);
+				return false;
+			}
+
+			notify(undefined, `文档 ${data.fileName} 删除失败`);
+			return false;
+		}
 	};
 } // End of class Http.

@@ -1,4 +1,4 @@
-### A Obsidian plugin for you to publish documents to [易东云](https://www.ydc.show) platform.
+### A [Obsidian](https://obsidian.md/) plugin for you to publish documents to [易东云](https://www.ydc.show) platform.
 
 #### Check our HP for more info.
 

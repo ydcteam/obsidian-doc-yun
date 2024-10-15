@@ -7,8 +7,8 @@ import { log, notify, showNotice, progress } from "@/utils";
 import {
 	Http,
 	AttachConfig,
-	PostDocumentData,
-	PostDocumentWithAttachData,
+	RenameDocumentData,
+	PublishDocumentData,
 	RemoveDocumentData,
 } from "@/http";
 import {
@@ -355,7 +355,7 @@ export default class YdcDocPublisher extends Plugin {
 
 	publishDocument = async (file: TFile, attachConfig: AttachConfig | null) => {
 		const pn = progress(`发布文档 ${file.name} 中...`);
-		let data: PostDocumentWithAttachData = {
+		let data: PublishDocumentData = {
 			fileName: file.path,
 			vault: this.app.vault.getName(),
 			content: "",
@@ -407,7 +407,7 @@ export default class YdcDocPublisher extends Plugin {
 		}
 
 		showNotice(`同步文档名称变更中...`);
-		let data: PostDocumentData = {
+		let data: RenameDocumentData = {
 			fileName: job.to.path,
 			oldFileName: job.from,
 			vault: this.app.vault.getName(),
