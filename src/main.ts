@@ -26,6 +26,7 @@ import { RenameQueue } from "@/rename_queue";
 import { RemoveQueue } from "@/remove_queue";
 import { DEFAULT_SETTINGS, Settings } from "@/setting";
 import Markdown from "@/markdown_parser";
+import { LangTypeAndAuto, TransItemType, I18n } from "./i18n";
 import YdcDocSettingTab from "@/setting_tab";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -44,6 +45,7 @@ export default class YdcDocPublisher extends Plugin {
 	renameOprLog: RenameQueue;
 	removeOprLog: RemoveQueue;
 	markdown: Markdown;
+	i18n!: I18n;
 
 	requestHandler: Http;
 
@@ -63,7 +65,7 @@ export default class YdcDocPublisher extends Plugin {
 		await this.prepareSettingAndRequestHandler();
 		await this.preparePlugin();
 
-		this.addSettingTab(new YdcDocSettingTab(this.app, this));
+		this.addSettingTab(new YdcDocSettingTab(this.app, this, this.i18n));
 	}
 
 	async preparePlugin() {
@@ -75,9 +77,13 @@ export default class YdcDocPublisher extends Plugin {
 			this.requestHandler.checkAttachmentHash,
 		);
 
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
+
 		this.syncRibbon = this.addRibbonIcon(
 			iconNameSyncAllWait,
-			"易东云-全部发布",
+			t("publish_all_docs"),
 			async () => this.publishAllDocuments(),
 		);
 
@@ -86,14 +92,14 @@ export default class YdcDocPublisher extends Plugin {
 				if (target instanceof TFile) {
 					menu.addItem((item) => {
 						item
-							.setTitle("发布到易东云")
+							.setTitle(t("publish_one_doc"))
 							.setIcon("document")
 							.onClick(async () => {
-								log("发布中...");
+								log(t("publishing"));
 								try {
 									await this.publishSingleDocument(target);
 								} catch (e) {
-									notify(e, "文档发布失败");
+									notify(e, t("publish_err"));
 								}
 							});
 					});
@@ -102,14 +108,14 @@ export default class YdcDocPublisher extends Plugin {
 
 				menu.addItem((item) => {
 					item
-						.setTitle("全部发布到易东云")
+						.setTitle(t("publish_path_docs"))
 						.setIcon("document")
 						.onClick(async () => {
-							log("文件夹发布中...");
+							log(t("publishing"));
 							try {
 								await this.publishDocuments(target);
 							} catch (e) {
-								notify(e, "文档发布失败");
+								notify(e, t("publish_err"));
 							}
 						});
 				});
@@ -220,30 +226,33 @@ export default class YdcDocPublisher extends Plugin {
 		if (!(folder instanceof TFolder)) {
 			return;
 		}
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		new Confirm(
 			this.app,
-			"发布到易东云",
-			"是否发布该目录的全部文档到易东云?",
+			t("publish_one_doc"),
+			t("confirm_publish_path_docs"),
 			async () => {
 				if (this.syncStatus !== "finish") {
-					showNotice("请等待之前的操作完成");
+					showNotice(t("wait_for_publishing"));
 					return;
 				}
 
 				const files = this.getFolderDocs(folder);
 				if (files.length < 1) {
-					showNotice("没有待发布的文档");
+					showNotice(t("no_docs_to_publish"));
 					return;
 				}
 
-				const pn = progress("开始批量发布文档...");
+				const pn = progress(t("start_batch_publish"));
 
 				this.syncStatus = "syncing";
 				if (this.syncRibbon !== undefined) {
 					setIcon(this.syncRibbon, iconNameSyncAllRunning);
 					this.syncRibbon.setAttribute(
 						"aria-label",
-						"正在发布目录全部文档中...",
+						t("status_batch_publishing"),
 					);
 				}
 
@@ -257,7 +266,7 @@ export default class YdcDocPublisher extends Plugin {
 					try {
 						await this.publishDocument(files[i], attachConfig);
 					} catch (e) {
-						notify(e, "文档发布失败");
+						notify(e, t("publish_err"));
 					}
 					await sleep(300); // 防止 web 接口频率限制.
 				}
@@ -265,40 +274,46 @@ export default class YdcDocPublisher extends Plugin {
 				this.syncStatus = "finish";
 				if (this.syncRibbon !== undefined) {
 					setIcon(this.syncRibbon, iconNameSyncAllWait);
-					this.syncRibbon.setAttribute("aria-label", "易东云-全部发布");
+					this.syncRibbon.setAttribute("aria-label", t("publish_path_docs"));
 				}
 				pn.hide();
 			},
 			() => {
-				showNotice("取消目录全部发布");
+				showNotice(t("cancel_batch_publish"));
 			},
 		).open();
 	}
 
 	// 仓库全部文档发布.
 	async publishAllDocuments() {
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		new Confirm(
 			this.app,
-			"发布到易东云",
-			"是否发布全部文档到易东云?",
+			t("publish_all_docs"),
+			t("confirm_publish_all_docs"),
 			async () => {
 				if (this.syncStatus !== "finish") {
-					showNotice("请等待之前的操作完成");
+					showNotice(t("wait_for_publishing"));
 					return;
 				}
 
 				const files = this.getAllDocs();
 				if (files.length < 1) {
-					showNotice("没有待发布的文档");
+					showNotice(t("no_docs_to_publish"));
 					return;
 				}
 
-				const pn = progress("开始批量发布文档...");
+				const pn = progress(t("start_all_publish"));
 
 				this.syncStatus = "syncing";
 				if (this.syncRibbon !== undefined) {
 					setIcon(this.syncRibbon, iconNameSyncAllRunning);
-					this.syncRibbon.setAttribute("aria-label", "正在发布全部文档中...");
+					this.syncRibbon.setAttribute(
+						"aria-label",
+						t("status_all_publishing"),
+					);
 				}
 
 				const attachConfig = await this.requestHandler.getAttachConfig();
@@ -311,7 +326,7 @@ export default class YdcDocPublisher extends Plugin {
 					try {
 						await this.publishDocument(files[i], attachConfig);
 					} catch (e) {
-						notify(e, "文档发布失败");
+						notify(e, t("publish_err"));
 					}
 					await sleep(300); // 防止 web 接口频率限制.
 				}
@@ -319,12 +334,12 @@ export default class YdcDocPublisher extends Plugin {
 				this.syncStatus = "finish";
 				if (this.syncRibbon !== undefined) {
 					setIcon(this.syncRibbon, iconNameSyncAllWait);
-					this.syncRibbon.setAttribute("aria-label", "易东云-全部发布");
+					this.syncRibbon.setAttribute("aria-label", t("publish_all_docs"));
 				}
 				pn.hide();
 			},
 			() => {
-				showNotice("取消全部发布");
+				showNotice(t("cancel_all_publish"));
 			},
 		).open();
 	}
@@ -354,7 +369,10 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	publishDocument = async (file: TFile, attachConfig: AttachConfig | null) => {
-		const pn = progress(`发布文档 ${file.name} 中...`);
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
+		const pn = progress(t("publish_doc", { docName: file.name }));
 		let data: PublishDocumentData = {
 			fileName: file.path,
 			vault: this.app.vault.getName(),
@@ -368,7 +386,7 @@ export default class YdcDocPublisher extends Plugin {
 			attachConfig,
 		);
 		if (content === false || typeof content == "boolean") {
-			notify(undefined, `文档 ${file.name} 取消发布`);
+			notify(undefined, t("canceled_publish_doc", { docName: file.name }));
 			pn.hide();
 			return;
 		}
@@ -388,6 +406,10 @@ export default class YdcDocPublisher extends Plugin {
 			return;
 		}
 
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
+
 		if (this.debug) {
 			console.debug(
 				`renameSyncJob: check if old doc published: ${job.from}...`,
@@ -405,8 +427,7 @@ export default class YdcDocPublisher extends Plugin {
 			}
 			return;
 		}
-
-		showNotice(`同步文档名称变更中...`);
+		showNotice(t("status_doc_rename_sync"));
 		let data: RenameDocumentData = {
 			fileName: job.to.path,
 			oldFileName: job.from,
@@ -434,6 +455,10 @@ export default class YdcDocPublisher extends Plugin {
 			return;
 		}
 
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
+
 		if (this.debug) {
 			console.debug(
 				`removeSyncJob: check if doc published: ${job.target.path}...`,
@@ -452,7 +477,7 @@ export default class YdcDocPublisher extends Plugin {
 			return;
 		}
 
-		showNotice(`同步文档删除操作中...`);
+		showNotice(t("status_doc_remove_sync"));
 		let data: RemoveDocumentData = {
 			fileName: job.target.path,
 			vault: this.app.vault.getName(),
@@ -474,6 +499,12 @@ export default class YdcDocPublisher extends Plugin {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 		this.requestHandler = new Http({
 			settings: this.settings,
+		});
+
+		// lang should be load early, but after settings
+		this.i18n = new I18n(this.settings.lang!, async (lang: LangTypeAndAuto) => {
+			this.settings.lang = lang;
+			await this.saveSettings();
 		});
 	}
 

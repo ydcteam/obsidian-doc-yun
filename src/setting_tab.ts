@@ -1,18 +1,36 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import { showNotice } from "@/utils";
-import HelpManual from "@/manual_doc";
 import YdcDocPublisher from "@/main";
+import { I18n, TransItemType } from "./i18n";
 
 /**
  * 设置页面.
  */
 export default class YdcDocSettingTab extends PluginSettingTab {
 	plugin: YdcDocPublisher;
+	i18n!: I18n;
+	HelpManual: {
+		helpText: string;
+		helpLink: string;
+		homeText?: string;
+		homeUrl?: string;
+	};
 
-	constructor(app: App, plugin: YdcDocPublisher) {
+	constructor(app: App, plugin: YdcDocPublisher, i18n: I18n) {
 		super(app, plugin);
 		this.plugin = plugin;
+		this.i18n = i18n;
+		this.HelpManual = {
+			helpText: this.t("manual_title"),
+			helpLink: "https://ydc.asia/doc_index",
+			homeText: this.t("manual_link_text"),
+			homeUrl: "https://web.ydc.show",
+		};
 	}
+
+	t = (x: TransItemType, vars?: any) => {
+		return this.i18n.t(x, vars);
+	};
 
 	display(): void {
 		const { containerEl } = this;
@@ -22,17 +40,17 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		const mainDoc = containerEl.createDiv();
 		mainDoc.createEl("div", undefined, (div) => {
 			div.createEl("h3", undefined, (h4) => {
-				h4.innerText = "【易东云】文档发布平台";
+				h4.innerText = this.t("setting_main_title");
 			});
 		});
 
-		mainDoc.createEl("h3", { text: "设置" });
+		mainDoc.createEl("h3", { text: this.t("setting_name") });
 		new Setting(mainDoc)
-			.setName("易东云账号")
-			.setDesc("易东云登录账号名")
+			.setName(this.t("setting_yidong_account"))
+			.setDesc(this.t("setting_yidong_account_desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("输入易东云账号")
+					.setPlaceholder(this.t("setting_yidong_account_place_holder"))
 					.setValue(this.plugin.settings.username)
 					.onChange(async (value) => {
 						this.plugin.settings.username = value.trim();
@@ -41,11 +59,11 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(mainDoc)
-			.setName("发布地址")
-			.setDesc("易东云管理后台获取到的Obsidian发布地址")
+			.setName(this.t("setting_yidong_ob_publish_url"))
+			.setDesc(this.t("setting_yidong_ob_publish_url_desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("输入地址")
+					.setPlaceholder(this.t("setting_yidong_ob_publish_url_place_holder"))
 					.setValue(this.plugin.settings.url)
 					.onChange(async (value) => {
 						this.plugin.settings.url = value.trim();
@@ -54,11 +72,11 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(mainDoc)
-			.setName("API Key")
-			.setDesc("用户认证KEY")
+			.setName(this.t("setting_yidong_api_key"))
+			.setDesc(this.t("setting_yidong_api_key_desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("请输入认证KEY")
+					.setPlaceholder(this.t("setting_yidong_api_key_place_holder"))
 					.setValue(this.plugin.settings.apiKey)
 					.onChange(async (value) => {
 						this.plugin.settings.apiKey = value.trim();
@@ -68,10 +86,10 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 
 		new Setting(mainDoc)
 			.setName("API Secret")
-			.setDesc("用户认证密钥")
+			.setDesc(this.t("setting_yidong_api_secret_desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("请输入认证密钥")
+					.setPlaceholder(this.t("setting_yidong_api_secret_place_holder"))
 					.setValue(this.plugin.settings.apiSecret)
 					.onChange(async (value) => {
 						this.plugin.settings.apiSecret = value.trim();
@@ -79,15 +97,15 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 					}),
 			);
 
-		mainDoc.createEl("h3", { text: "扩展设置" });
+		mainDoc.createEl("h3", { text: this.t("setting_extra_name") });
 
-		mainDoc.createEl("h4", { text: "重命名文档操作自动同步" });
+		mainDoc.createEl("h4", {
+			text: this.t("setting_rename_auto_sync_main_title"),
+		});
 
 		new Setting(mainDoc)
-			.setName("自动同步")
-			.setDesc(
-				"是否在后台自动同步已发布文档的重命名操作到易东云. 注意：启用后请重新启用插件才可生效.",
-			)
+			.setName(this.t("setting_rename_auto_sync"))
+			.setDesc(this.t("setting_rename_auto_sync_desc"))
 			.addToggle((t) =>
 				t
 					.setValue(this.plugin.settings.autoSyncRename)
@@ -97,10 +115,8 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 					}),
 			);
 		new Setting(mainDoc)
-			.setName("自动同步频率")
-			.setDesc(
-				"自动同步重命名文档的时间频率，单位秒. 默认 3 秒一次. 如果频繁需要重命名，可以调到 1 秒.",
-			)
+			.setName(this.t("setting_rename_auto_sync_freq"))
+			.setDesc(this.t("setting_rename_auto_sync_freq_desc"))
 			.addText((t) =>
 				t
 					.setValue(`${this.plugin.settings.autoSyncRenameInterv}`)
@@ -113,13 +129,13 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 					}),
 			);
 
-		mainDoc.createEl("h4", { text: "删除文档操作自动同步" });
+		mainDoc.createEl("h4", {
+			text: this.t("setting_remove_auto_sync_main_title"),
+		});
 
 		new Setting(mainDoc)
-			.setName("自动同步")
-			.setDesc(
-				"是否在后台自动同步已发布文档的删除操作到易东云. 注意：启用后请重新启用插件才可生效.",
-			)
+			.setName(this.t("setting_remove_auto_sync"))
+			.setDesc(this.t("setting_remove_auto_sync_desc"))
 			.addToggle((t) =>
 				t
 					.setValue(this.plugin.settings.autoSyncRemove)
@@ -129,10 +145,8 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 					}),
 			);
 		new Setting(mainDoc)
-			.setName("自动同步频率")
-			.setDesc(
-				"自动同步文档删除操作的时间频率，单位秒. 默认 3 秒一次. 如果频繁需要删除，可以调到 1 秒.",
-			)
+			.setName(this.t("setting_remove_auto_sync_freq"))
+			.setDesc(this.t("setting_remove_auto_sync_freq_desc"))
 			.addText((t) =>
 				t
 					.setValue(`${this.plugin.settings.autoSyncRemoveInterv}`)
@@ -147,25 +161,25 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 
 		mainDoc.createEl("hr");
 
-		mainDoc.createEl("h3", { text: "使用帮助" });
+		mainDoc.createEl("h3", { text: this.t("setting_help_doc_main_title") });
 
 		const helpDoc = mainDoc.createDiv();
 		helpDoc.createEl("div", undefined, (div) => {
 			div.createEl("p", undefined, (p) => {
-				p.innerText = HelpManual.helpText;
+				p.innerText = this.HelpManual.helpText;
 			});
 			div.createEl("span", undefined, (span) => {
-				span.innerText = "详情请阅读 ";
+				span.innerText = this.t("setting_help_doc_main_go_detail");
 				span.createEl("a", undefined, (link) => {
-					link.href = HelpManual.helpLink;
-					link.innerText = "帮助文档";
+					link.href = this.HelpManual.helpLink;
+					link.innerText = this.t("setting_help_doc_name");
 				});
 			});
 
 			div.createEl("p", undefined, (p) => {
 				p.createEl("a", undefined, (link) => {
-					link.href = HelpManual.homeUrl;
-					link.innerText = HelpManual.homeText;
+					link.href = this.HelpManual.homeUrl;
+					link.innerText = this.HelpManual.homeText;
 				});
 			});
 		});
@@ -178,12 +192,12 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		max: number = 10,
 	): number {
 		if (!/^\d+$/.test(s)) {
-			showNotice("同步频率配置需要是一个整数");
+			showNotice(this.t("warn_sync_freq_need_int"));
 			return def;
 		}
 		const interv = parseInt(s.trim());
 		if (interv < 0 || interv > 10) {
-			showNotice(`自动同步频率配置值: ${min}~${max}`);
+			showNotice(this.t("warn_sync_freq_range", { min: min, max: max }));
 			return def;
 		}
 

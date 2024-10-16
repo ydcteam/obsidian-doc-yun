@@ -1,13 +1,14 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import fs from "fs";
 import commonjs from "@rollup/plugin-commonjs";
 import replace from "@rollup/plugin-replace";
 import { terser } from "rollup-plugin-terser";
+import json from "@rollup/plugin-json";
 import copy from "rollup-plugin-copy";
 import typescript from "@rollup/plugin-typescript";
 import injectProcessEnv from "rollup-plugin-inject-process-env";
 import postcss from "rollup-plugin-postcss";
 import cssnano from "cssnano";
+import fs from "fs";
 import path from "path";
 
 // Load environment variables
@@ -45,6 +46,7 @@ const BASE_CONFIG = {
 
 const getRollupPlugins = (...plugins) =>
 	[
+		json(),
 		postcss({
 			modules: true,
 			plugins: [cssnano({ preset: "default" })],

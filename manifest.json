@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"name": "YidongCloud Publish",
-	"description": "Publish your notes to YidongCloud platform.",
+	"description": "Publish your notes to the Web provided by YiDong platform.",
 	"author": "YDC 易东云网络",
 	"authorUrl": "https://web.ydc.show",
 	"isDesktopOnly": false

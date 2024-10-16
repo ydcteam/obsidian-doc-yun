@@ -11,8 +11,11 @@ import {
 	getAttachConfig,
 } from "@/ydcurl";
 
+import type { LangTypeAndAuto } from "./i18n";
+
 export interface Settings {
 	valid(): boolean;
+	lang?: LangTypeAndAuto;
 	username: string;
 	url: string;
 	getEntrypointUrl: (type: entryPontType) => string;
@@ -63,6 +66,7 @@ export const DEFAULT_SETTINGS: Settings = {
 	url: "",
 	apiKey: "",
 	apiSecret: "",
+	lang: "auto",
 	getToken(): string {
 		return Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString("base64");
 	},

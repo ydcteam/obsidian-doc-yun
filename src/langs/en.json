@@ -1,0 +1,68 @@
+{
+	"confirm": "Confirm",
+	"disable": "Disable",
+	"enable": "Enable",
+	"submit": "Submit",
+	"publish_doc": "发布文档 {{docName}} 中...",
+	"canceled_publish_doc": "文档 {{docName}} 取消发布",
+	"publish_all_docs": "Publish all vault notes to YiDong",
+	"publish_path_docs": "Publish notes to YiDong",
+	"publish_one_doc": "Publish note to YiDOng",
+	"publishing": "Publish in progress...",
+	"publish_err": "Failed to publish",
+	"wait_for_publishing": "Please wait for last publish to complete.",
+	"no_docs_to_publish": "No notes for publishing.",
+	"start_batch_publish": "Start to publish notes...",
+	"start_all_publish": "Start to publish all vault notes...",
+	"status_batch_publishing": "Publish in progress...",
+	"status_all_publishing": "Publish in progress...",
+	"status_doc_rename_sync": "Syncing note rename...",
+	"status_doc_remove_sync": "Syncing note removal...",
+	"cancel_batch_publish": "Publish canceled.",
+	"cancel_all_publish": "Publish vault all notes canceled.",
+
+	"confirm_publish_path_docs": "Confirm to publish all notes to YiDong?",
+	"confirm_publish_all_docs": "Confirm to publish all vault notes to YiDong??",
+
+	"setting_main_title": "YiDong Note Publish Platform",
+	"setting_name": "Settings",
+	"setting_extra_name": "Advanced Settings",
+
+	"setting_yidong_account": "YiDong Account",
+	"setting_yidong_account_desc": "YiDong account",
+	"setting_yidong_account_place_holder": "Input YiDong account...",
+
+	"setting_yidong_ob_publish_url": "Service Endpoint",
+	"setting_yidong_ob_publish_url_desc": "Service endpoint from YiDong platform admin page.",
+	"setting_yidong_ob_publish_url_place_holder": "Input service endpoint...",
+
+	"setting_yidong_api_key": "Access Key",
+	"setting_yidong_api_key_desc": "Access key from YiDong platform admin page",
+	"setting_yidong_api_key_place_holder": "Input access key...",
+
+	"setting_yidong_api_secret": "Access Key Secret",
+	"setting_yidong_api_secret_desc": "Access key secret from YiDong platform admin page",
+	"setting_yidong_api_secret_place_holder": "Input access key secret...",
+
+	"setting_rename_auto_sync_main_title": "Note Rename Auto-Sync Setting",
+	"setting_rename_auto_sync": "Auto Sync",
+	"setting_rename_auto_sync_desc": "Enable to auto sync note rename operation to YiDong platform. Note: You need to restart Obsidian when enable.",
+	"setting_rename_auto_sync_freq": "Auto Sync Frequency",
+	"setting_rename_auto_sync_freq_desc": "Config the auto-sync frequency in seconds. Minimum: 1 second. Default: Sync every 3 seconds. Set it to 1 second when you rename note frequently.",
+
+	"setting_remove_auto_sync_main_title": "Note Removal Auto-Sync Setting",
+	"setting_remove_auto_sync": "Auto Sync",
+	"setting_remove_auto_sync_desc": "Enable to auto sync note removal operation to YiDong platform. Note: You need to restart Obsidian when enable.",
+	"setting_remove_auto_sync_freq": "Auto Sync Frequency",
+	"setting_remove_auto_sync_freq_desc": "Config the auto-sync frequency in seconds. Minimum: 1 second. Default: Sync every 3 seconds. Set it to 1 second when you remove note frequently.",
+
+	"setting_help_doc_main_title": "Manual",
+	"setting_help_doc_main_go_detail": "Read manual in detail - ",
+	"setting_help_doc_name": "Open Manual",
+
+	"warn_sync_freq_need_int": "Sync frequency need to be an integer",
+	"warn_sync_freq_range": "Auto sync frequency allowed: {{min}}~{{max}}",
+
+	"manual_title": "You can find manual and docs below.",
+	"manual_link_text": "Visit YiDong Platform Home Page"
+}
