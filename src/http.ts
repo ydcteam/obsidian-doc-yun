@@ -4,6 +4,7 @@ import { NetworkError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
+import { I18n, TransItemType } from "./i18n";
 
 export interface RenameDocumentData {
 	file: string;
@@ -78,8 +79,9 @@ export class Http {
 	config: {
 		settings: Settings;
 	};
+	i18n: I18n;
 
-	constructor(config: { settings: Settings }) {
+	constructor(config: { settings: Settings }, i18n: I18n) {
 		this.config = config;
 		this.auth = new Auth({
 			apiKey: this.config.settings.apiKey,
@@ -88,7 +90,12 @@ export class Http {
 		if (process.env.debugHttp) {
 			this.debug = true;
 		}
+		this.i18n = i18n;
 	}
+
+	t = (x: TransItemType, vars?: any) => {
+		return this.i18n.t(x, vars);
+	};
 
 	isDebug(): boolean {
 		return this?.debug == true;
@@ -117,7 +124,7 @@ export class Http {
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
-				this.config.settings.getEntrypointUrl("checkPublished"),
+				this.config.settings.getEntrypointUrl("chkPublished"),
 				data,
 				params,
 			);
@@ -127,7 +134,10 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, "查询文件发布状态：" + result.msg);
+				notify(
+					undefined,
+					this.t("err_chkPublished_with_msg", { msg: result.msg }),
+				);
 				return false;
 			}
 
@@ -135,11 +145,16 @@ export class Http {
 		} catch (error) {
 			console.error("checkDocumentPublished error:", error);
 			if (error.response) {
-				notify(undefined, "查询文件发布状态失败：" + error.response.data?.msg);
+				notify(
+					undefined,
+					this.t("err_chkPublished_with_msg", {
+						msg: error.response.data?.msg || "Unknown",
+					}),
+				);
 				return false;
 			}
 
-			notify(undefined, "查询文件发布状态失败");
+			notify(undefined, this.t("err_chkPublished_failed"));
 			return false;
 		}
 	};
@@ -163,7 +178,7 @@ export class Http {
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.get(
-				this.config.settings.getEntrypointUrl("getAttachConfig"),
+				this.config.settings.getEntrypointUrl("attachConf"),
 				params,
 			);
 			if (this.isDebug()) {
@@ -172,7 +187,10 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, "获取文档附件配置失败：" + result.msg);
+				notify(
+					undefined,
+					this.t("err_attachConf_with_msg", { msg: result.msg }),
+				);
 				return null;
 			}
 			if (this.isDebug()) {
@@ -185,11 +203,16 @@ export class Http {
 		} catch (error) {
 			console.error("getAttachConfig error: ", error);
 			if (error.response) {
-				notify(undefined, "获取文档附件配置失败：" + error.response.data?.msg);
+				notify(
+					undefined,
+					this.t("err_attachConf_with_msg", {
+						msg: error.response.data?.msg || "Unknown",
+					}),
+				);
 				return null;
 			}
 
-			notify(undefined, "获取文档附件配置失败");
+			notify(undefined, this.t("err_attachConf_failed"));
 			return null;
 		}
 	};
@@ -271,7 +294,7 @@ export class Http {
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
-				this.config.settings.getEntrypointUrl("uploadAttachmentCheckHash"),
+				this.config.settings.getEntrypointUrl("chkAttach"),
 				form,
 				params,
 			);
@@ -281,7 +304,12 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, "附件检查失败:" + result.msg);
+				notify(
+					undefined,
+					this.t("err_chkAttach_with_msg", {
+						msg: result.msg,
+					}),
+				);
 				return null;
 			}
 
@@ -293,11 +321,16 @@ export class Http {
 		} catch (error) {
 			console.error("checkAttachmentHash error:", error);
 			if (error.response) {
-				notify(undefined, "附件检查请求失败：" + error.response.data?.msg);
+				notify(
+					undefined,
+					this.t("err_chkAttach_with_msg", {
+						msg: error.response.data?.msg || "Unknown",
+					}),
+				);
 				return null;
 			}
 
-			notify(undefined, "附件检查请求失败");
+			notify(undefined, this.t("err_attachConf_failed"));
 			return null;
 		}
 	};
@@ -345,7 +378,7 @@ export class Http {
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.post(
-				this.config.settings.getEntrypointUrl("publishWithAttach"),
+				this.config.settings.getEntrypointUrl("publish"),
 				form,
 				params,
 			);
@@ -355,23 +388,40 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, `文档 ${data.fileName} 发布失败：${result.msg}`);
+				notify(
+					undefined,
+					this.t("err_publish_with_msg", {
+						docName: data.fileName,
+						msg: result.msg,
+					}),
+				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 发布成功`);
+			notify(
+				undefined,
+				this.t("sucs_publish", {
+					docName: data.fileName,
+				}),
+			);
 			return true;
 		} catch (error) {
 			console.error("publishDocument error:", error);
 			if (error.response) {
 				notify(
 					undefined,
-					`文档 ${data.fileName} 发布失败：${error.response.data?.msg}`,
+					this.t("err_publish_with_msg", {
+						docName: data.fileName,
+						msg: error.response.data?.msg || "Unknown",
+					}),
 				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 发布失败`);
+			notify(
+				undefined,
+				this.t("err_publish_failed", { docName: data.fileName }),
+			);
 			return false;
 		}
 	};
@@ -410,48 +460,42 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, `文档 ${data.fileName} 发布失败: ${result.msg}`);
+				notify(
+					undefined,
+					this.t("err_rename_with_msg", {
+						docName: data.fileName,
+						msg: result.msg,
+					}),
+				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 发布成功`);
+			notify(
+				undefined,
+				this.t("sucs_rename", {
+					docName: data.fileName,
+				}),
+			);
 			return true;
 		} catch (error) {
 			console.error("renameDocument error:", error);
 			if (error.response) {
 				notify(
 					undefined,
-					`文档 ${data.fileName} 发布失败: ${error.response.data?.msg}`,
+					this.t("err_rename_with_msg", {
+						docName: data.fileName,
+						msg: error.response.data?.msg || "Unknown",
+					}),
 				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 发布失败`);
+			notify(
+				undefined,
+				this.t("err_rename_failed", { docName: data.fileName }),
+			);
 			return false;
 		}
-	};
-
-	chkRsp = (rsp: any): ChkRspResult => {
-		if (!rsp) {
-			throw new NetworkError("unexpected response data");
-		}
-		const data = rsp.data;
-		if (!data) {
-			throw new NetworkError("unexpected response data");
-		}
-		if (data.code != 1) {
-			return {
-				data: null,
-				code: 1,
-				msg: data.msg ?? "操作失败",
-			};
-		}
-		const inData = data.data;
-		return {
-			data: inData,
-			code: 0,
-			msg: "ok",
-		};
 	};
 
 	/**
@@ -488,24 +532,64 @@ export class Http {
 
 			const result = this.chkRsp(rsp);
 			if (result.code != 0) {
-				notify(undefined, `文档 ${data.fileName} 删除失败: ${result.msg}`);
+				notify(
+					undefined,
+					this.t("err_remove_with_msg", {
+						docName: data.fileName,
+						msg: result.msg,
+					}),
+				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 删除成功`);
+			notify(
+				undefined,
+				this.t("sucs_remove", {
+					docName: data.fileName,
+				}),
+			);
 			return true;
 		} catch (error) {
 			console.error("removeDocument error:", error);
 			if (error.response) {
 				notify(
 					undefined,
-					`文档 ${data.fileName} 删除失败: ${error.response.data?.msg}`,
+					this.t("err_remove_with_msg", {
+						docName: data.fileName,
+						msg: error.response.data?.msg || "Unknown",
+					}),
 				);
 				return false;
 			}
 
-			notify(undefined, `文档 ${data.fileName} 删除失败`);
+			notify(
+				undefined,
+				this.t("err_remove_failed", { docName: data.fileName }),
+			);
 			return false;
 		}
+	};
+
+	chkRsp = (rsp: any): ChkRspResult => {
+		if (!rsp) {
+			throw new NetworkError("unexpected response data");
+		}
+		const data = rsp.data;
+		if (!data) {
+			throw new NetworkError("unexpected response data");
+		}
+		if (data.code != 1) {
+			return {
+				data: null,
+				code: 1,
+				msg: data.msg ?? "操作失败",
+			};
+		}
+		const inData = data.data;
+		return {
+			data: inData,
+			code: 0,
+			msg: "ok",
+		};
 	};
 } // End of class Http.

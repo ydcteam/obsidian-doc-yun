@@ -63,6 +63,7 @@ export default class YdcDocPublisher extends Plugin {
 		addIcon(iconNameSyncAllRunning, iconSvgSyncRunning);
 
 		await this.prepareSettingAndRequestHandler();
+
 		await this.preparePlugin();
 
 		this.addSettingTab(new YdcDocSettingTab(this.app, this, this.i18n));
@@ -75,6 +76,7 @@ export default class YdcDocPublisher extends Plugin {
 			this.settings,
 			this.app,
 			this.requestHandler.checkAttachmentHash,
+			this.i18n,
 		);
 
 		const t = (x: TransItemType, vars?: any) => {
@@ -497,15 +499,19 @@ export default class YdcDocPublisher extends Plugin {
 
 	async prepareSettingAndRequestHandler() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-		this.requestHandler = new Http({
-			settings: this.settings,
-		});
 
-		// lang should be load early, but after settings
+		// 多语言需要在设置初始化之后配置.
 		this.i18n = new I18n(this.settings.lang!, async (lang: LangTypeAndAuto) => {
 			this.settings.lang = lang;
 			await this.saveSettings();
 		});
+
+		this.requestHandler = new Http(
+			{
+				settings: this.settings,
+			},
+			this.i18n,
+		);
 	}
 
 	async saveSettings() {

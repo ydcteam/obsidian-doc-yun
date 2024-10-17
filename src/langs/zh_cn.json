@@ -63,6 +63,33 @@
 	"warn_sync_freq_need_int": "同步频率配置需要是一个整数",
 	"warn_sync_freq_range": "自动同步频率配置值: {{min}}~{{max}}",
 
+	"err_chkPublished_failed": "查询文件发布状态失败",
+	"err_chkPublished_with_msg": "查询文件发布状态错误：{{msg}}",
+
+	"err_attachConf_failed": "获取文档附件配置错失败",
+	"err_attachConf_with_msg": "获取文档附件配置错误：{{msg}}",
+
+	"err_chkAttach_failed": "附件检查失败",
+	"err_chkAttach_with_msg": "附件检查错误：{{msg}}",
+
+	"sucs_publish": "文档 {{docName}} 发布成功",
+	"err_publish_failed": "文档 {{docName}} 发布失败",
+	"err_publish_with_msg": "文档 {{docName}} 发布失败：{{msg}}",
+
+	"sucs_rename": "文档 {{docName}} 改名成功",
+	"err_rename_failed": "文档 {{docName}} 改名失败",
+	"err_rename_with_msg": "文档 {{docName}} 改名失败：{{msg}}",
+
+	"sucs_remove": "文档 {{docName}} 删除成功",
+	"err_remove_failed": "文档 {{docName}} 删除失败",
+	"err_remove_with_msg": "文档 {{docName}} 删除失败：{{msg}}",
+
+	"err_no_attach_conf": "后台未配置附件上传",
+	"err_doc_attach_ref_invalid": "附件引用 {{msg}} 的所指向资源不存在，无法继续发布文档",
+	"err_attach_no_ext": "附件引用 {{msg}} 不支持没有扩展名的附件",
+	"err_attach_no_support": "不支持该附件类型：{{filename}} ",
+	"err_attach_oversize_skipped": "该附件类大小超过了限制，跳过：{{filename}}",
+
 	"manual_title": "访问下方的帮助文档获取使用教程",
 	"manual_link_text": "易东文档官网"
 }

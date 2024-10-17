@@ -8,6 +8,7 @@ import {
 import { App, TFile, getLinkpath } from "obsidian";
 import * as SparkMD5 from "spark-md5";
 import { AttachmentError, NoticeError } from "@/errors";
+import { I18n, TransItemType } from "./i18n";
 
 export interface Asset {
 	path: string;
@@ -35,15 +36,26 @@ export default class Markdown {
 	obApp: App;
 	attachChecker: AttachChecker;
 	debug?: boolean;
+	i18n: I18n;
 
-	constructor(settings: Settings, app: App, checker: AttachChecker) {
+	constructor(
+		settings: Settings,
+		app: App,
+		checker: AttachChecker,
+		i18n: I18n,
+	) {
 		this.settings = settings;
 		this.obApp = app;
 		this.attachChecker = checker;
 		if (process.env.debugMarkdownParser) {
 			this.debug = true;
 		}
+		this.i18n = i18n;
 	}
+
+	t = (x: TransItemType, vars?: any) => {
+		return this.i18n.t(x, vars);
+	};
 
 	readContent = async (
 		file: TFile,
@@ -53,7 +65,7 @@ export default class Markdown {
 		const text = await this.obApp.vault.cachedRead(file);
 		// console.log(`origin text: ${text}`);
 		if (attachConfig === null) {
-			notify(undefined, "后台未配置附件上传");
+			notify(undefined, this.t("err_no_attach_conf"));
 			return { content: text };
 		}
 		const result = await this.convertLinks(
@@ -147,25 +159,34 @@ export default class Markdown {
 					if (!linkedFile) {
 						notify(
 							undefined,
-							`附件引用 ${attachMatch} 的所指向资源不存在，无法继续发布文档`,
+							this.t("err_doc_attach_ref_invalid", { msg: attachMatch }),
 						);
 						return false;
 					}
 					const ext = attachName.split(".").pop();
 					if (ext === "" || ext === undefined) {
-						notify(undefined, "不支持没有扩展名的附件");
+						notify(
+							undefined,
+							this.t("err_attach_no_ext", { msg: attachMatch }),
+						);
 						continue;
 					}
 					if (this.debug) {
 						console.debug(`allowed exts:${allowAttachExts} <-> ${ext}`);
 					}
 					if (allowAttachExts.indexOf(ext) === -1) {
-						notify(undefined, "不支持该附件类型: " + attachName);
+						notify(
+							undefined,
+							this.t("err_attach_no_support", { filename: attachName }),
+						);
 						continue;
 					}
 					const attach = await this.obApp.vault.readBinary(linkedFile);
 					if (attach.byteLength > maxAttachSize) {
-						notify(undefined, "该附件类大小超过了限制，跳过: " + attachName);
+						notify(
+							undefined,
+							this.t("err_attach_oversize_skipped", { filename: attachName }),
+						);
 						continue;
 					}
 					const attachHash = this.getFileHash(attach);
@@ -254,14 +275,17 @@ export default class Markdown {
 					if (!linkedFile) {
 						notify(
 							undefined,
-							`附件引用 ${attachMatch} 的所指向资源不存在，无法继续发布文档`,
+							this.t("err_doc_attach_ref_invalid", { msg: attachMatch }),
 						);
 						return false;
 					}
 
 					const ext = attachName.split(".").pop();
 					if (ext === "" || ext === undefined) {
-						notify(undefined, `附件引用 ${attachMatch} 不支持没有扩展名的附件`);
+						notify(
+							undefined,
+							this.t("err_attach_no_ext", { msg: attachMatch }),
+						);
 						continue;
 					}
 					if (this.debug) {
@@ -270,7 +294,7 @@ export default class Markdown {
 					if (allowAttachExts.indexOf(ext) === -1) {
 						notify(
 							undefined,
-							`附件引用 ${attachMatch} 不支持该附件类型: ${ext}`,
+							this.t("err_attach_no_support", { filename: attachName }),
 						);
 						continue;
 					}
@@ -279,7 +303,7 @@ export default class Markdown {
 					if (attach.byteLength > maxAttachSize) {
 						notify(
 							undefined,
-							`附件引用 ${attachMatch} 的资源大小超过了限制，跳过: ${attachName}`,
+							this.t("err_attach_oversize_skipped", { filename: attachName }),
 						);
 						continue;
 					}

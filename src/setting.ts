@@ -3,13 +3,10 @@ import {
 	onPublishEndpoint,
 	onRenameEndpoint,
 	onRemoveEndpoint,
-	checkPublished,
-	uploadAttachment,
-	uploadAttachmentCheckHash,
-	onPublishWithAttachEndpoint,
-	onBatchPublishWithAttachEndpoint,
-	getAttachConfig,
-} from "@/ydcurl";
+	onCheckPublishedEndpoint,
+	onChkAttachEndpoint,
+	getAttachConfigEndpoint,
+} from "@/endpoints";
 
 import type { LangTypeAndAuto } from "./i18n";
 
@@ -48,15 +45,12 @@ export interface Settings {
 
 export type entryPontType =
 	| "publish"
-	| "publishWithAttach"
 	| "batchPublish"
-	| "batchPublishWithAttach"
 	| "rename"
 	| "remove"
-	| "checkPublished"
-	| "uploadAttachment"
-	| "uploadAttachmentCheckHash"
-	| "getAttachConfig";
+	| "chkPublished"
+	| "chkAttach"
+	| "attachConf";
 
 export const DEFAULT_SETTINGS: Settings = {
 	valid: function (): boolean {
@@ -75,24 +69,18 @@ export const DEFAULT_SETTINGS: Settings = {
 		switch (type) {
 			case "publish":
 				return `${this.url}/${onPublishEndpoint}`;
-			case "publishWithAttach":
-				return `${this.url}/${onPublishWithAttachEndpoint}`;
 			case "batchPublish":
 				return `${this.url}/${onBatchPublishEndpoint}`;
-			case "batchPublishWithAttach":
-				return `${this.url}/${onBatchPublishWithAttachEndpoint}`;
 			case "rename":
 				return `${this.url}/${onRenameEndpoint}`;
 			case "remove":
 				return `${this.url}/${onRemoveEndpoint}`;
-			case "checkPublished":
-				return `${this.url}/${checkPublished}`;
-			case "uploadAttachment":
-				return `${this.url}/${uploadAttachment}`;
-			case "uploadAttachmentCheckHash":
-				return `${this.url}/${uploadAttachmentCheckHash}`;
-			case "getAttachConfig":
-				return `${this.url}/${getAttachConfig}`;
+			case "chkPublished":
+				return `${this.url}/${onCheckPublishedEndpoint}`;
+			case "chkAttach":
+				return `${this.url}/${onChkAttachEndpoint}`;
+			case "attachConf":
+				return `${this.url}/${getAttachConfigEndpoint}`;
 			default:
 				return "";
 		}
