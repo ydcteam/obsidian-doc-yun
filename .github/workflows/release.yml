@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  PLUGIN_NAME: obsidian-ydc-yun
+  PLUGIN_NAME: obsidian-publish-ydcdep
 
 jobs:
   build:
