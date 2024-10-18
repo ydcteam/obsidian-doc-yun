@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-ydc-yun",
+	"id": "obsidian-publish-ydcdep",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"name": "YidongCloud Publish",
+	"name": "YiDongCloud Publish",
 	"description": "Publish your notes to the Web provided by YiDong Cloud platform.",
-	"author": "YidongCloud 易东云网络科技",
+	"author": "YiDong Cloud 易东云网络科技",
 	"authorUrl": "https://web.ydc.show",
 	"isDesktopOnly": false
 }

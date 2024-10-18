@@ -17,6 +17,8 @@
 		"postbuild",
 		"softprops",
 		"sucs",
+		"ydcdep",
+		"ydcteam",
 		"ydcurl",
 		"yidong"
 	],
