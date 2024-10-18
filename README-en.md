@@ -2,7 +2,11 @@
 
 En | [中文](https://github.com/ydcteam/obsidian-doc-yun/blob/main/README.md)
 
-### How to use.
+### 【YIDONG DOC】ob plugin for self-hosted deployment
+
+Rapidly build a document-oriented website, integrating the website and online documents into one, with content as the core of a multifunctional website. The editing and publishing of online documents are separated to maximize support for high-performance system operation, with less maintenance time cost but higher efficiency. Integration of more components to expand more functions. Webpage templates enable rapid page construction, allowing even users with zero experience to efficiently maintain the website. Thanks to the widespread compatibility of MARKDOWN syntax, efficient editing can be done locally on the computer. The console integrates components and functions for unified management, providing a more user-friendly experience!
+
+### How to use
 
 1. Go to [YiDong Platform](https://yun.ydc.show/index.html#/user/login) and sign-up: ![Register](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/en/image.png)
 2. Login to user panel: [YiDong Platform User Panel](https://yun.ydc.show/index.html#/user/login)
@@ -18,8 +22,10 @@ En | [中文](https://github.com/ydcteam/obsidian-doc-yun/blob/main/README.md)
 12. You can check the result when it's done by clicking the button shown on the screenshot: ![Go](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/en/image-8.png)
 13. Result: ![Result](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/en/image-9.png) ![Result 2](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/en/image-10.png)
 
-### In a nutshell
+### Experience flowchart
 
 ![](https://pic.ydc.asia/doc/doctry.png)
+
+---
 
 ### END

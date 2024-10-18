@@ -2,6 +2,9 @@
 
 中文 | [En](https://github.com/ydcteam/obsidian-doc-yun/blob/main/README-en.md)
 
+### 【易东文档】独立版OBSIDIAN发布插件
+极速搭建文档型网站，网站和在线文档二合一，以内容为核心的多功能网站；在线文档的编辑和发布分离，最大化支持系统的高性能运行，更少维护时间成本却更高效率；融合更多组件弹扩展更多功能；网页模版快速搭建页面，零基础用户也可高效维护网站；得益于MARKDOWN语法的广泛兼容性，电脑本地高效编辑；控制台集成组件和功能进行统一管理，带来更友好体验！
+
 ### 如何使用
 
 1. 访问 [易东云官网](https://yun.ydc.show/index.html#/user/login) 注册账号：![Register](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/zh/image.png)
@@ -18,7 +21,7 @@
 12. 查看发布结果：![Go](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/zh/image-8.png)
 13. 效果：![Result](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/zh/image-9.png) ![Result 2](https://github.com/ydcteam/obsidian-doc-yun/blob/main/docs/img/zh/image-10.png)
 
-### 一图流
+### 体验流程图
 
 ![](https://pic.ydc.asia/doc/doctry.png)
 
