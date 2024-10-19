@@ -23,6 +23,6 @@
 
 ### 体验流程图
 
-![](https://pic.ydc.asia/doc/doctry.png)
+![](https://pic.ydc.asia/doc/doclaunch.png)
 
 ### END
