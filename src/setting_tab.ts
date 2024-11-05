@@ -39,9 +39,7 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 
 		const mainDoc = containerEl.createDiv();
 		mainDoc.createEl("div", undefined, (div) => {
-			div.createEl("h3", undefined, (h4) => {
-				h4.innerText = this.t("setting_main_title");
-			});
+			div.createEl("h3", { text: this.t("setting_main_title") });
 		});
 
 		mainDoc.createEl("h3", { text: this.t("setting_name") });
@@ -165,21 +163,22 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 
 		const helpDoc = mainDoc.createDiv();
 		helpDoc.createEl("div", undefined, (div) => {
-			div.createEl("p", undefined, (p) => {
-				p.innerText = this.HelpManual.helpText;
-			});
-			div.createEl("span", undefined, (span) => {
-				span.innerText = this.t("setting_help_doc_main_go_detail");
-				span.createEl("a", undefined, (link) => {
-					link.href = this.HelpManual.helpLink;
-					link.innerText = this.t("setting_help_doc_name");
-				});
-			});
+			div.createEl("p", { text: this.HelpManual.helpText });
+			div.createEl(
+				"span",
+				{ text: this.t("setting_help_doc_main_go_detail") },
+				(span) => {
+					span.createEl("a", {
+						text: this.t("setting_help_doc_name"),
+						href: this.HelpManual.helpLink,
+					});
+				},
+			);
 
 			div.createEl("p", undefined, (p) => {
-				p.createEl("a", undefined, (link) => {
-					link.href = this.HelpManual.homeUrl;
-					link.innerText = this.HelpManual.homeText;
+				p.createEl("a", {
+					text: this.HelpManual.homeText,
+					href: this.HelpManual.homeUrl,
 				});
 			});
 		});
