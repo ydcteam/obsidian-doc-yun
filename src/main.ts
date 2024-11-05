@@ -10,7 +10,7 @@ import {
 	RenameDocumentData,
 	PublishDocumentData,
 	RemoveDocumentData,
-} from "@/http";
+} from "@/httpv2";
 import {
 	App,
 	Plugin,

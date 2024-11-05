@@ -1,10 +1,10 @@
 import { notify } from "@/utils";
-import axios from "axios";
 import { NetworkError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 import { I18n, TransItemType } from "./i18n";
+import { http_get, http_post_form, http_post_json } from "./http_wrapper";
 
 export interface RenameDocumentData {
 	file: string;
@@ -123,10 +123,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_get(
 				this.config.settings.getEntrypointUrl("chkPublished"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					queries: { fileName: data.fileName, vault: data.vault },
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("查询文件发布状态请求结果:", rsp);
@@ -177,9 +179,9 @@ export class Http {
 			const auth = await this.auth.authorization("GET", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.get(
+			const rsp = await http_get(
 				this.config.settings.getEntrypointUrl("attachConf"),
-				params,
+				{ headers: params.headers},
 			);
 			if (this.isDebug()) {
 				console.debug("获取文档附件配置 请求结果:", rsp);
@@ -293,10 +295,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_form(
 				this.config.settings.getEntrypointUrl("chkAttach"),
-				form,
-				params,
+				{
+					headers: params.headers,
+					data: form,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("附件检查请求结果:", rsp);
@@ -377,10 +381,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_form(
 				this.config.settings.getEntrypointUrl("publish"),
-				form,
-				params,
+				{
+					headers: params.headers,
+					data: form,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("publishDocument 请求结果:", rsp);
@@ -449,10 +455,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_json(
 				this.config.settings.getEntrypointUrl("rename"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					data: data,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("发布请求结果:", rsp);
@@ -521,10 +529,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_json(
 				this.config.settings.getEntrypointUrl("remove"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					data: data,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("移除文档请求结果:", rsp);
