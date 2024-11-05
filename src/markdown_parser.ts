@@ -140,14 +140,14 @@ export default class Markdown {
 		// ![[image.png]]
 		// ![[docs/image.png]]
 		// ![[https://12112.com/xaxs/sdasad/image.png]]
-		const transcludedAttahRegex =
+		const attachRegexType1 =
 			/!\[\[(.*?)(\.([a-zA-Z0-9]+))\|(.*?)\]\]|!\[\[(.*?)(\.([a-zA-Z0-9]+))\]\]/g;
-		const transcludedAttachMatches = text.match(transcludedAttahRegex);
-		// console.log("convertLinks: matches", transcludedAttachMatches);
-		if (transcludedAttachMatches) {
-			for (let i = 0; i < transcludedAttachMatches.length; i++) {
+		const attachMatchesType1 = text.match(attachRegexType1);
+		// console.log("convertLinks: matches", attachMatchesType1);
+		if (attachMatchesType1) {
+			for (let i = 0; i < attachMatchesType1.length; i++) {
 				try {
-					const attachMatch = transcludedAttachMatches[i];
+					const attachMatch = attachMatchesType1[i];
 					const [attachName, size] = attachMatch
 						.substring(attachMatch.indexOf("[") + 2, attachMatch.indexOf("]"))
 						.split("|");
@@ -230,13 +230,13 @@ export default class Markdown {
 		//![](attach.png)
 		//![](docs/attach.png)
 		//![](https://wewew.ewew.com/xsax/xasxas/xa/attach.png)
-		const attachRegex = /!\[(.*?)\]\((.*?)(\.([a-zA-Z0-9]+))\)/g;
-		const attachMatches = text.match(attachRegex);
-		// console.log("convertLinks: matches 2", attachMatches);
-		if (attachMatches) {
-			for (let i = 0; i < attachMatches.length; i++) {
+		const attachRegexType2 = /!\[(.*?)\]\((.*?)(\.([a-zA-Z0-9]+))\)/g;
+		const attachMatchesType2 = text.match(attachRegexType2);
+		// console.log("convertLinks: matches 2", attachMatchesType2);
+		if (attachMatchesType2) {
+			for (let i = 0; i < attachMatchesType2.length; i++) {
 				try {
-					const attachMatch = attachMatches[i];
+					const attachMatch = attachMatchesType2[i];
 
 					const nameStart = attachMatch.indexOf("[") + 1;
 					const nameEnd = attachMatch.indexOf("]");

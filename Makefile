@@ -2,26 +2,26 @@ all: build compress
 
 compress:
 	cd dist && \
-	zip -r obsidian-publish-ydcdep.zip obsidian-publish-ydcdep && \
-	shasum -a 256 obsidian-publish-ydcdep.zip > obsidian-publish-ydcdep.sha256sum
+	zip -r obsidian-ydcpub-dep.zip obsidian-ydcpub-dep && \
+	shasum -a 256 obsidian-ydcpub-dep.zip > obsidian-ydcpub-dep.sha256sum
 
 build:
 	yarn && \
 	yarn build && \
 	cd dist && \
-	mkdir -p obsidian-publish-ydcdep && \
-	mv -f ./main.js obsidian-publish-ydcdep/main.js && \
-	mv -f ./manifest.json obsidian-publish-ydcdep/manifest.json && \
-	mv -f ./styles.css obsidian-publish-ydcdep/styles.css
+	mkdir -p obsidian-ydcpub-dep && \
+	mv -f ./main.js obsidian-ydcpub-dep/main.js && \
+	mv -f ./manifest.json obsidian-ydcpub-dep/manifest.json && \
+	mv -f ./styles.css obsidian-ydcpub-dep/styles.css
 
 dev:
 	yarn && \
 	yarn dev && \
 	cd dist && \
-	mkdir -p obsidian-publish-ydcdep && \
-	mv -f ./main.js obsidian-publish-ydcdep/main.js && \
-	mv -f ./manifest.json obsidian-publish-ydcdep/manifest.json && \
-	mv -f ./styles.css obsidian-publish-ydcdep/styles.css
+	mkdir -p obsidian-ydcpub-dep && \
+	mv -f ./main.js obsidian-ydcpub-dep/main.js && \
+	mv -f ./manifest.json obsidian-ydcpub-dep/manifest.json && \
+	mv -f ./styles.css obsidian-ydcpub-dep/styles.css
 
 clean:
 	rm -rf dist/*
