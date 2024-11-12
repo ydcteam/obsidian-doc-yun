@@ -7,9 +7,9 @@
 
 ### 如何试用文档发布教程
 
-1. 访问 [易东云官网](https://yun.ydc.show/index.html#/user/login) 注册账号：[Register](https://pic.ydc.asia/doc/readme_image.png)
-2. 登录 [会员后台](https://yun.ydc.show/index.html#/user/login)
-3. 获取 Obsidian 发布地址：[Publish url](https://pic.ydc.asia/doc/readme_image-1.png)
+1. 访问 [易东云官网](https://yun.yidong.site/index.html#/user/login) 注册账号：![Register](https://pic.ydc.asia/doc/readme_image.png)
+2. 登录 [会员后台](https://yun.yidong.site/index.html#/user/login)
+3. 获取 Obsidian 发布地址：![Publish url](https://pic.ydc.asia/doc/readme_image-1.png)
 4. 获取 API Key 和 API Secret：![API Key and secret](https://pic.ydc.asia/doc/readme_image-2.png)
 5. 安装本插件。如何安装插件，请参考 Obsidian 官网文档。
 6. 在插件配置中填入 3 和 4 步获取的配置：![Config](https://pic.ydc.asia/doc/readme_image-3.png)
@@ -23,6 +23,6 @@
 
 ### 体验流程图
 
-![](https://pic.ydc.asia/doc/doclaunch.png)
+![发布流程图](https://pic.ydc.asia/doc/doclaunch.png)
 
 ### END
