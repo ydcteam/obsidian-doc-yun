@@ -28,6 +28,8 @@ import { DEFAULT_SETTINGS, Settings } from "@/setting";
 import Markdown from "@/markdown_parser";
 import { LangTypeAndAuto, TransItemType, I18n } from "./i18n";
 import YdcDocSettingTab from "@/setting_tab";
+import * as CodeblockProcessor from "@/codeblock_processor";
+import { PluginMode } from "@/types";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -37,7 +39,12 @@ type SyncStatusType = "syncing" | "finish";
  * 插件主程序.
  */
 export default class YdcDocPublisher extends Plugin {
+	// 全局控制开关. mode=saas.
+	enable: boolean;
 	debug?: boolean;
+
+	pluginMode: PluginMode;
+
 	settings: Settings;
 	syncRibbon?: HTMLElement;
 	currSyncMsg?: string;
@@ -51,11 +58,17 @@ export default class YdcDocPublisher extends Plugin {
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
+		// if (this.debug) {console.debug("YdcDocPublisher load envs:", process.env);}
+		this.pluginMode = process.env.mode as PluginMode;
+		console.info("YdcDocPublisher mode:", this.pluginMode);
 		if (process.env.debugMain) {
 			this.debug = true;
 		}
 	}
 
+	isSaaSMode(): boolean {
+		return this.pluginMode === "saas";
+	}
 	async onload() {
 		const { iconSvgSyncWait, iconSvgSyncRunning } = getSyncAllIconSvg();
 
@@ -64,9 +77,59 @@ export default class YdcDocPublisher extends Plugin {
 
 		await this.prepareSettingAndRequestHandler();
 
-		await this.preparePlugin();
+		if (this.isSaaSMode() && !this.settings.valid()) {
+			this.enable = false;
+		} else {
+			await this.preparePlugin();
+		}
 
-		this.addSettingTab(new YdcDocSettingTab(this.app, this, this.i18n));
+		this.addSettingTab(new YdcDocSettingTab(this.app, this, this.i18n, this.pluginMode));
+		this.registerCodeblockProcessors();
+	}
+	
+	registerCodeblockProcessors() {
+		this.registerMarkdownCodeBlockProcessor(
+			"outlineTable",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderOutlineTable(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"listTable",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderListTable(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"echarts",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderEcharts(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"fileTree",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderFileTree(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"markmap",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderMarkmap(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"markmapVertical",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderMarkmapVertical(source, el, ctx);
+			},
+		);
+		this.registerMarkdownCodeBlockProcessor(
+			"timeline",
+			(source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+				CodeblockProcessor.renderTimeLine(source, el, ctx);
+			},
+		);
 	}
 
 	async preparePlugin() {
@@ -215,6 +278,10 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async publishSingleDocument(file: TFile) {
+		if (this.isSaaSMode() && !this.enable) {
+			showNotice("应用过期，插件不可用");
+			return;
+		}
 		const attachConfig = await this.requestHandler.getAttachConfig();
 		if (this.debug) {
 			console.debug(`attach config: ${attachConfig}`);
@@ -225,6 +292,10 @@ export default class YdcDocPublisher extends Plugin {
 	// 发布目录下全部文档.
 	// 包括子文件夹递归发布.
 	async publishDocuments(folder: TAbstractFile) {
+		if (this.isSaaSMode() && !this.enable) {
+			showNotice("应用过期，插件不可用");
+			return;
+		}
 		if (!(folder instanceof TFolder)) {
 			return;
 		}
@@ -291,6 +362,10 @@ export default class YdcDocPublisher extends Plugin {
 		const t = (x: TransItemType, vars?: any) => {
 			return this.i18n.t(x, vars);
 		};
+		if (this.isSaaSMode() && !this.enable) {
+			showNotice("应用过期，插件不可用");
+			return;
+		}
 		new Confirm(
 			this.app,
 			t("publish_all_docs"),
@@ -347,6 +422,10 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async handleRename(target: TAbstractFile, oldPath: string) {
+		if (this.isSaaSMode() && !this.enable) {
+			showNotice("应用过期，插件不可用");
+			return;
+		}
 		if (!(target instanceof TFile)) {
 			return;
 		}
@@ -361,6 +440,10 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async handleRemove(target: TAbstractFile) {
+		if (this.isSaaSMode() && !this.enable) {
+			showNotice("应用过期，插件不可用");
+			return;
+		}
 		if (!(target instanceof TFile)) {
 			return;
 		}
@@ -497,6 +580,31 @@ export default class YdcDocPublisher extends Plugin {
 
 	onunload() {}
 
+	async loadPluginStatus() {
+		const status = await this.requestHandler.getPluginStatus();
+
+		if (status === null) {
+			this.enable = false;
+			showNotice("获取插件状态失败，插件将无法使用，请稍后重启客户端后重试");
+			return;
+		}
+
+		if (!status.enable) {
+			this.enable = false;
+			showNotice(
+				"【在线文档OB版应用】未购买或已过期，请稍购买/续费后重启客户端重试",
+			);
+			return;
+		}
+
+		console.info("Plugin status:", status);
+
+		this.enable = status.enable;
+		this.settings.enable = status.enable;
+		this.settings.expireTime = status.expireTime;
+		this.settings.remainingInDays = status.remainingInDays;
+		this.settings.remainingInSeconds = status.remainingInSeconds;
+	}
 	async prepareSettingAndRequestHandler() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 
@@ -505,13 +613,20 @@ export default class YdcDocPublisher extends Plugin {
 			this.settings.lang = lang;
 			await this.saveSettings();
 		});
+		if (this.isSaaSMode() && !this.settings.valid()) {
+			return;
+		}
 
 		this.requestHandler = new Http(
 			{
 				settings: this.settings,
+				pluginMode: this.pluginMode,
 			},
 			this.i18n,
 		);
+		if (this.isSaaSMode()) {
+			await this.loadPluginStatus();
+		}
 	}
 
 	async saveSettings() {

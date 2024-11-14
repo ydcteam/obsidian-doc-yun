@@ -1,0 +1,40 @@
+all: build compress
+
+compress:
+	cd dist && \
+	zip -r obsidian-publish-to-ydc-saas.zip obsidian-publish-to-ydc-saas && \
+	shasum -a 256 obsidian-publish-to-ydc-saas.zip > obsidian-publish-to-ydc-saas.sha256sum
+
+build:
+	yarn && \
+	yarn buildSaaS && \
+	cd dist && \
+	mkdir -p obsidian-publish-to-ydc-saas && \
+	mv -f ./main.js obsidian-publish-to-ydc-saas/main.js && \
+	mv -f ./manifest.json obsidian-publish-to-ydc-saas/manifest.json && \
+	mv -f ./styles.css obsidian-publish-to-ydc-saas/styles.css
+
+dev:
+	yarn && \
+	yarn devSaaS && \
+	cd dist && \
+	mkdir -p obsidian-publish-to-ydc-saas && \
+	mv -f ./main.js obsidian-publish-to-ydc-saas/main.js && \
+	mv -f ./manifest.json obsidian-publish-to-ydc-saas/manifest.json && \
+	mv -f ./styles.css obsidian-publish-to-ydc-saas/styles.css
+
+clean:
+	rm -rf dist/*
+	
+install: dev
+	mkdir -p /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas && \
+	cp -f ./dist/obsidian-publish-to-ydc-saas/main.js  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/main.js && \
+	cp -f ./dist/obsidian-publish-to-ydc-saas/manifest.json  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/manifest.json
+	cp -f ./dist/obsidian-publish-to-ydc-saas/styles.css  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/styles.css
+install-1: dev
+	mkdir -p /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas && \
+	cp -f ./dist/obsidian-publish-to-ydc-saas/main.js  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/main.js && \
+	cp -f ./dist/obsidian-publish-to-ydc-saas/manifest.json  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/manifest.json
+	cp -f ./dist/obsidian-publish-to-ydc-saas/styles.css  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/styles.css
+
+.PHONY: all dev build compress clean install install-1

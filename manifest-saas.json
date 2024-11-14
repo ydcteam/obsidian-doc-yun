@@ -1,0 +1,10 @@
+{
+	"id": "yidong-cloud-saas-obsidian-doc",
+	"version": "1.4.1",
+	"minAppVersion": "0.15.0",
+	"name": "publish to YDC-SaaS",
+	"description": "易东云在线文档发布插件，提供发布文档到易东云文档平台的能力",
+	"author": "YDC 易东云网络",
+	"authorUrl": "https://www.ydc.show",
+	"isDesktopOnly": false
+}

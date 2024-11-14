@@ -4,7 +4,7 @@ import { NetworkError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
-import { I18n, TransItemType } from "./i18n";
+import { PluginMode } from "@/types";
 
 export interface RenameDocumentData {
 	file: string;
@@ -75,13 +75,14 @@ export interface PluginStatusResult {
  */
 export class Http {
 	auth: Auth;
+	pluginMode: PluginMode;
 	debug?: boolean;
 	config: {
 		settings: Settings;
 	};
 	i18n: I18n;
 
-	constructor(config: { settings: Settings }, i18n: I18n) {
+	constructor(config: { settings: Settings;  pluginMode: PluginMode }, i18n: I18n) {
 		this.config = config;
 		this.auth = new Auth({
 			apiKey: this.config.settings.apiKey,
@@ -90,6 +91,7 @@ export class Http {
 		if (process.env.debugHttp) {
 			this.debug = true;
 		}
+		this.pluginMode = config.pluginMode;
 		this.i18n = i18n;
 	}
 
@@ -100,6 +102,66 @@ export class Http {
 	isDebug(): boolean {
 		return this?.debug == true;
 	}
+	getPluginStatus = async (): Promise<PluginStatusResult | null> => {
+		if (!this.isSaaSMode()) {
+			return null;
+		}
+
+		try {
+			const params: AuthParam = {
+				headers: {
+					"Content-Type": "multipart/form-data",
+					"X-Requested-With": "XMLHttpRequest",
+					"request-app": this.config.settings.ydcAppId,
+					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+				},
+			};
+
+			const auth = this.auth.authorization("GET", params);
+			params.headers["Authorization"] = auth;
+
+			const rsp = await axios.get(
+				this.config.settings.getEntrypointUrl("getPluginStatus"),
+				params,
+			);
+
+			if (this.isDebug()) {
+				console.debug("getPluginStatus result:", rsp);
+			}
+
+			const result = this.chkRsp(rsp);
+			if (result.code != 0) {
+				if (result.code == 10010) {
+					return {
+						enable: false,
+						expireTime: new Date().getTime(),
+						remainingInDays: 0,
+						remainingInSeconds: 0,
+					};
+				}
+				notify(undefined, "插件状态检查失败:" + result.msg);
+				return null;
+			}
+
+			return {
+				enable: result.data.bought,
+				expireTime: result.data.expireTimeMs,
+				remainingInDays: result.data.remainingInDays,
+				remainingInSeconds: result.data.remainingInSeconds,
+			};
+		} catch (error) {
+			if (this.isDebug()) {
+				console.debug("getPluginStatus error:", error);
+			}
+			if (error.response) {
+				notify(undefined, "插件状态检查失败:" + error.response.data?.msg);
+				return null;
+			}
+
+			notify(undefined, "插件状态检查失败");
+			return null;
+		}
+	};
 
 	/**
 	 * 查询文件发布状态.
@@ -571,6 +633,31 @@ export class Http {
 	};
 
 	chkRsp = (rsp: any): ChkRspResult => {
+		// yun.
+		if (!this.isSaaSMode()) {
+			if (!rsp) {
+				throw new NetworkError("unexpected response data");
+			}
+			const data = rsp.data;
+			if (!data) {
+				throw new NetworkError("unexpected response data");
+			}
+			if (data.code != 1) {
+				return {
+					data: null,
+					code: 1,
+					msg: data.msg ?? "操作失败",
+				};
+			}
+			const inData = data.data;
+			return {
+				data: inData,
+				code: 0,
+				msg: "ok",
+			};
+		}
+
+		// SaaS.
 		if (!rsp) {
 			throw new NetworkError("unexpected response data");
 		}
@@ -578,16 +665,31 @@ export class Http {
 		if (!data) {
 			throw new NetworkError("unexpected response data");
 		}
-		if (data.code != 1) {
-			return {
-				data: null,
-				code: 1,
-				msg: data.msg ?? "操作失败",
-			};
+		if (data.code != 200) {
+			throw new NormalError(`请求失败：${data.msg}`);
 		}
 		const inData = data.data;
+		if (!inData) {
+			throw new NetworkError("unexpected response data");
+		}
+
+		if (inData.errcode != 0) {
+			if (inData.errcode == 10010) {
+				notify(undefined, "请求失败，应用已过期或未购买");
+			}
+			return {
+				data: inData,
+				code: inData.errcode,
+				msg: data.msg ?? "N/A",
+			};
+		}
+		const inInData = inData.data;
+		if (!inData) {
+			throw new NetworkError("unexpected response data");
+		}
+
 		return {
-			data: inData,
+			data: inInData,
 			code: 0,
 			msg: "ok",
 		};

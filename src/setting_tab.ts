@@ -2,12 +2,14 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 import { showNotice } from "@/utils";
 import YdcDocPublisher from "@/main";
 import { I18n, TransItemType } from "./i18n";
-
+import { PluginMode } from "@/types";
+import moment from "moment";
 /**
  * 设置页面.
  */
 export default class YdcDocSettingTab extends PluginSettingTab {
 	plugin: YdcDocPublisher;
+	pluginMode: PluginMode;
 	i18n!: I18n;
 	HelpManual: {
 		helpText: string;
@@ -16,9 +18,10 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		homeUrl?: string;
 	};
 
-	constructor(app: App, plugin: YdcDocPublisher, i18n: I18n) {
+	constructor(app: App, plugin: YdcDocPublisher, i18n: I18n， pluginMode: PluginMode) {
 		super(app, plugin);
 		this.plugin = plugin;
+		this.pluginMode = pluginMode;
 		this.i18n = i18n;
 		this.HelpManual = {
 			helpText: this.t("manual_title"),
@@ -31,6 +34,10 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 	t = (x: TransItemType, vars?: any) => {
 		return this.i18n.t(x, vars);
 	};
+	
+	isSaaSMode(): boolean {
+		return this.pluginMode === "saas";
+	}
 
 	display(): void {
 		const { containerEl } = this;

@@ -1,0 +1,47 @@
+all: build compress
+
+compress:
+	cd dist && \
+	zip -r obsidian-publish-to-ydc-yun.zip obsidian-publish-to-ydc-yun && \
+	shasum -a 256 obsidian-publish-to-ydc-yun.zip > obsidian-publish-to-ydc-yun.sha256sum
+
+build:
+	yarn && \
+	yarn build && \
+	cd dist && \
+	mkdir -p obsidian-publish-to-ydc-yun && \
+	mv -f ./main.js obsidian-publish-to-ydc-yun/main.js && \
+	mv -f ./manifest.json obsidian-publish-to-ydc-yun/manifest.json && \
+	mv -f ./styles.css obsidian-publish-to-ydc-yun/styles.css
+
+dev:
+	yarn && \
+	yarn dev && \
+	cd dist && \
+	mkdir -p obsidian-publish-to-ydc-yun && \
+	mv -f ./main.js obsidian-publish-to-ydc-yun/main.js && \
+	mv -f ./manifest.json obsidian-publish-to-ydc-yun/manifest.json && \
+	mv -f ./styles.css obsidian-publish-to-ydc-yun/styles.css
+
+clean:
+	rm -rf dist/*
+	
+install: dev
+	mkdir -p /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-yun && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/main.js /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-yun/main.js && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/manifest.json /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-yun/manifest.json && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/styles.css  /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-yun/styles.css
+
+install-1: dev
+	mkdir -p /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/main.js /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/main.js && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/manifest.json /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/manifest.json && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/styles.css  /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/styles.css
+
+install-back: dev
+	mkdir -p /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/main.js /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/main.js && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/manifest.json /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/manifest.json && \
+	cp -f ./dist/obsidian-publish-to-ydc-yun/styles.css  /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-to-ydc-yun/styles.css
+
+.PHONY: all dev build compress clean install install-1 install-back
