@@ -6,6 +6,7 @@ import {
 	onCheckPublishedEndpoint,
 	onChkAttachEndpoint,
 	getAttachConfigEndpoint,
+	getPluginStatusEndpoint,
 } from "@/endpoints";
 
 import type { LangTypeAndAuto } from "./i18n";
@@ -50,7 +51,8 @@ export type entryPontType =
 	| "remove"
 	| "chkPublished"
 	| "chkAttach"
-	| "attachConf";
+	| "attachConf"
+	| "getPluginStatus";
 
 export const DEFAULT_SETTINGS: Settings = {
 	valid: function (): boolean {
@@ -81,6 +83,8 @@ export const DEFAULT_SETTINGS: Settings = {
 				return `${this.url}/${onChkAttachEndpoint}`;
 			case "attachConf":
 				return `${this.url}/${getAttachConfigEndpoint}`;
+			case "getPluginStatus":
+				return `${this.url}/${getPluginStatusEndpoint}`;
 			default:
 				return "";
 		}

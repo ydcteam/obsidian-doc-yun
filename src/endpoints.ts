@@ -5,3 +5,4 @@ export const onRemoveEndpoint: string = "onRemove";
 export const onCheckPublishedEndpoint: string = "onChkPublished";
 export const onChkAttachEndpoint: string = "onChkAttach";
 export const getAttachConfigEndpoint: string = "attachConf";
+export const getPluginStatusEndpoint: string = "getPluginStatus";

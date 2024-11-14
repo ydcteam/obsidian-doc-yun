@@ -1,0 +1,26 @@
+.svgContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.toolbarZone {
+		width: 100%;
+	}
+}
+
+.svgZone {
+	min-width: 38vw;
+	min-height: 50vh;
+}
+
+@media (max-width: 1600px) {
+	.svgZone {
+		min-width: 45vw;
+	}
+}
+
+@media (max-width: 1200px) {
+	.svgZone {
+		min-width: 50vw;
+	}
+}

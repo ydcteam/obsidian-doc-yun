@@ -1,0 +1,21 @@
+.link {
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	stroke-width: 3 !important;
+	fill: none;
+}
+.linkLeaf {
+	stroke: rgb(113, 226, 170) !important;
+}
+.linkBranch {
+	stroke: rgb(242, 130, 210) !important;
+}
+.node {
+	padding: 10% 1%;
+	blockquote {
+		margin: 0;
+	}
+	p {
+		margin: 0;
+	}
+}

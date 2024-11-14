@@ -1,6 +1,6 @@
 {
 	"name": "yidong-cloud-obsidian-doc-plugin",
-	"version": "1.4.1",
+	"version": "1.0.0",
 	"description": "Yidong Cloud Document Obsidian publish plugin.",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
@@ -10,7 +10,9 @@
 	"type": "module",
 	"scripts": {
 		"dev": "cross-env NODE_ENV=development MODE=yun rollup --config rollup.config.js",
-		"build": "cross-env NODE_ENV=production MODE=yun rollup --config rollup.config.js"
+		"build": "cross-env NODE_ENV=production MODE=yun rollup --config rollup.config.js",
+		"devSaaS": "cross-env NODE_ENV=production MODE=saas rollup --config rollup.config.js",
+		"buildSaaS": "cross-env NODE_ENV=production MODE=saas rollup --config rollup.config.js"
 	},
 	"private": "true",
 	"keywords": [],

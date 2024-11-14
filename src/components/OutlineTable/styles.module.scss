@@ -1,0 +1,20 @@
+.tableZone {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.table {
+	height: 100%;
+	text-align: center;
+}
+
+.tableHead {
+	min-width: 33vw;
+}
+
+@media (max-width: 1660px) {
+	.tableHead {
+		min-width: 40vw;
+	}
+}

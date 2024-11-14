@@ -3,7 +3,7 @@ import { showNotice } from "@/utils";
 import YdcDocPublisher from "@/main";
 import { I18n, TransItemType } from "./i18n";
 import { PluginMode } from "@/types";
-import moment from "moment";
+import { moment } from "obsidian";
 /**
  * 设置页面.
  */
@@ -18,23 +18,28 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		homeUrl?: string;
 	};
 
-	constructor(app: App, plugin: YdcDocPublisher, i18n: I18n， pluginMode: PluginMode) {
+	constructor(
+		app: App,
+		plugin: YdcDocPublisher,
+		i18n: I18n,
+		pluginMode: PluginMode,
+	) {
 		super(app, plugin);
 		this.plugin = plugin;
 		this.pluginMode = pluginMode;
 		this.i18n = i18n;
 		this.HelpManual = {
 			helpText: this.t("manual_title"),
-			helpLink: "https://ydc.asia/doc_index",
+			helpLink: "https://ydc.asia/docindex",
 			homeText: this.t("manual_link_text"),
-			homeUrl: "https://web.ydc.show",
+			homeUrl: "https://doc.yidong.site",
 		};
 	}
 
 	t = (x: TransItemType, vars?: any) => {
 		return this.i18n.t(x, vars);
 	};
-	
+
 	isSaaSMode(): boolean {
 		return this.pluginMode === "saas";
 	}
@@ -48,6 +53,50 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		mainDoc.createEl("div", undefined, (div) => {
 			div.createEl("h3", { text: this.t("setting_main_title") });
 		});
+
+		if (this.isSaaSMode()) {
+			if (!this.plugin.settings.valid()) {
+				mainDoc.createEl("div", undefined, (div) => {
+					div.createEl("h4", {
+						text: this.t("plugin_get_started"),
+						cls: "appExpired",
+					});
+				});
+			} else {
+				mainDoc.createEl("div", undefined, (div) => {
+					const expireTime = new Date(this.plugin.settings.expireTime);
+					console.info("Plugin expireTime:", expireTime);
+					if (new Date().getTime() > this.plugin.settings.expireTime) {
+						div.createEl("h4", {
+							text: this.t("plugin_expired"),
+							cls: "appExpired",
+						});
+						return;
+					}
+
+					let expireTimeStr = moment
+						.unix(this.plugin.settings.expireTime / 1000)
+						.format(this.t("plugin_lifetime_fmt_day"));
+					if (this.plugin.settings.remainingInDays <= 0) {
+						expireTimeStr = moment
+							.unix(this.plugin.settings.expireTime / 1000)
+							.format(this.t("plugin_lifetime_fmt_sec"));
+					}
+					const expireTimeTxt = this.t("plugin_lifetime", {
+						remainingInDays: this.plugin.settings.remainingInDays,
+						expireTimeStr: expireTimeStr,
+					});
+
+					div.createEl("h4", {
+						text: this.t("plugin_lifetime_title"),
+					});
+					div.createEl("h6", {
+						text: expireTimeTxt,
+						cls: "appNotExpired",
+					});
+				});
+			}
+		}
 
 		mainDoc.createEl("h3", { text: this.t("setting_name") });
 		new Setting(mainDoc)

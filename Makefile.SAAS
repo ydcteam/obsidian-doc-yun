@@ -1,40 +1,44 @@
 all: build compress
 
+changeLangFile:
+	cp -f ./langs/zh_cn-saas.json ./src/langs/zh_cn.json && \
+	cp -f ./langs/en-saas.json ./src/langs/en.json
+
 compress:
 	cd dist && \
-	zip -r obsidian-publish-to-ydc-saas.zip obsidian-publish-to-ydc-saas && \
-	shasum -a 256 obsidian-publish-to-ydc-saas.zip > obsidian-publish-to-ydc-saas.sha256sum
+	zip -r obsidian-publish-ydcsaas.zip obsidian-publish-ydcsaas && \
+	shasum -a 256 obsidian-publish-ydcsaas.zip > obsidian-publish-ydcsaas.sha256sum
 
-build:
+build: changeLangFile
 	yarn && \
 	yarn buildSaaS && \
 	cd dist && \
-	mkdir -p obsidian-publish-to-ydc-saas && \
-	mv -f ./main.js obsidian-publish-to-ydc-saas/main.js && \
-	mv -f ./manifest.json obsidian-publish-to-ydc-saas/manifest.json && \
-	mv -f ./styles.css obsidian-publish-to-ydc-saas/styles.css
+	mkdir -p obsidian-publish-ydcsaas && \
+	mv -f ./main.js obsidian-publish-ydcsaas/main.js && \
+	mv -f ./manifest.json obsidian-publish-ydcsaas/manifest.json && \
+	mv -f ./styles.css obsidian-publish-ydcsaas/styles.css
 
-dev:
+dev: changeLangFile
 	yarn && \
 	yarn devSaaS && \
 	cd dist && \
-	mkdir -p obsidian-publish-to-ydc-saas && \
-	mv -f ./main.js obsidian-publish-to-ydc-saas/main.js && \
-	mv -f ./manifest.json obsidian-publish-to-ydc-saas/manifest.json && \
-	mv -f ./styles.css obsidian-publish-to-ydc-saas/styles.css
+	mkdir -p obsidian-publish-ydcsaas && \
+	mv -f ./main.js obsidian-publish-ydcsaas/main.js && \
+	mv -f ./manifest.json obsidian-publish-ydcsaas/manifest.json && \
+	mv -f ./styles.css obsidian-publish-ydcsaas/styles.css
 
 clean:
 	rm -rf dist/*
 	
 install: dev
-	mkdir -p /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas && \
-	cp -f ./dist/obsidian-publish-to-ydc-saas/main.js  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/main.js && \
-	cp -f ./dist/obsidian-publish-to-ydc-saas/manifest.json  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/manifest.json
-	cp -f ./dist/obsidian-publish-to-ydc-saas/styles.css  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-to-ydc-saas/styles.css
+	mkdir -p /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-ydcsaas && \
+	cp -f ./dist/obsidian-publish-ydcsaas/main.js  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-ydcsaas/main.js && \
+	cp -f ./dist/obsidian-publish-ydcsaas/manifest.json  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-ydcsaas/manifest.json
+	cp -f ./dist/obsidian-publish-ydcsaas/styles.css  /d/obsidianVaults/plugin_dev_new/.obsidian/plugins/obsidian-publish-ydcsaas/styles.css
 install-1: dev
-	mkdir -p /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas && \
-	cp -f ./dist/obsidian-publish-to-ydc-saas/main.js  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/main.js && \
-	cp -f ./dist/obsidian-publish-to-ydc-saas/manifest.json  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/manifest.json
-	cp -f ./dist/obsidian-publish-to-ydc-saas/styles.css  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-to-ydc-saas/styles.css
+	mkdir -p /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-ydcsaas && \
+	cp -f ./dist/obsidian-publish-ydcsaas/main.js  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-ydcsaas/main.js && \
+	cp -f ./dist/obsidian-publish-ydcsaas/manifest.json  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-ydcsaas/manifest.json
+	cp -f ./dist/obsidian-publish-ydcsaas/styles.css  /d/obsidianVaults/plugin_dev/.obsidian/plugins/obsidian-publish-ydcsaas/styles.css
 
-.PHONY: all dev build compress clean install install-1
+.PHONY: all changeLangFile dev build compress clean install install-1

@@ -1,10 +1,11 @@
 import { notify } from "@/utils";
 import axios from "axios";
-import { NetworkError } from "@/errors";
+import { NetworkError, NormalError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 import { PluginMode } from "@/types";
+import { I18n, TransItemType } from "./i18n";
 
 export interface RenameDocumentData {
 	file: string;
@@ -82,7 +83,10 @@ export class Http {
 	};
 	i18n: I18n;
 
-	constructor(config: { settings: Settings;  pluginMode: PluginMode }, i18n: I18n) {
+	constructor(
+		config: { settings: Settings; pluginMode: PluginMode },
+		i18n: I18n,
+	) {
 		this.config = config;
 		this.auth = new Auth({
 			apiKey: this.config.settings.apiKey,
@@ -98,6 +102,10 @@ export class Http {
 	t = (x: TransItemType, vars?: any) => {
 		return this.i18n.t(x, vars);
 	};
+
+	isSaaSMode() {
+		return (this.pluginMode === "saas");
+	}
 
 	isDebug(): boolean {
 		return this?.debug == true;
@@ -117,7 +125,7 @@ export class Http {
 				},
 			};
 
-			const auth = this.auth.authorization("GET", params);
+			const auth = await this.auth.authorization("GET", params);
 			params.headers["Authorization"] = auth;
 
 			const rsp = await axios.get(
@@ -633,6 +641,9 @@ export class Http {
 	};
 
 	chkRsp = (rsp: any): ChkRspResult => {
+
+		console.debug('chkRsp mode:', this.pluginMode);
+
 		// yun.
 		if (!this.isSaaSMode()) {
 			if (!rsp) {
@@ -646,7 +657,7 @@ export class Http {
 				return {
 					data: null,
 					code: 1,
-					msg: data.msg ?? "操作失败",
+					msg: data.msg ?? this.t("req_err_common"),
 				};
 			}
 			const inData = data.data;
@@ -675,7 +686,7 @@ export class Http {
 
 		if (inData.errcode != 0) {
 			if (inData.errcode == 10010) {
-				notify(undefined, "请求失败，应用已过期或未购买");
+				notify(undefined, this.t("req_err_expired"));
 			}
 			return {
 				data: inData,

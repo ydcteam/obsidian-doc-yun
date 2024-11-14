@@ -13,6 +13,7 @@ import {
 } from "@/http";
 import {
 	App,
+	MarkdownPostProcessorContext,
 	Plugin,
 	PluginManifest,
 	TAbstractFile,
@@ -83,10 +84,12 @@ export default class YdcDocPublisher extends Plugin {
 			await this.preparePlugin();
 		}
 
-		this.addSettingTab(new YdcDocSettingTab(this.app, this, this.i18n, this.pluginMode));
+		this.addSettingTab(
+			new YdcDocSettingTab(this.app, this, this.i18n, this.pluginMode),
+		);
 		this.registerCodeblockProcessors();
 	}
-	
+
 	registerCodeblockProcessors() {
 		this.registerMarkdownCodeBlockProcessor(
 			"outlineTable",
@@ -278,8 +281,11 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async publishSingleDocument(file: TFile) {
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		if (this.isSaaSMode() && !this.enable) {
-			showNotice("应用过期，插件不可用");
+			showNotice(t("plugin_expired"));
 			return;
 		}
 		const attachConfig = await this.requestHandler.getAttachConfig();
@@ -292,16 +298,16 @@ export default class YdcDocPublisher extends Plugin {
 	// 发布目录下全部文档.
 	// 包括子文件夹递归发布.
 	async publishDocuments(folder: TAbstractFile) {
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		if (this.isSaaSMode() && !this.enable) {
-			showNotice("应用过期，插件不可用");
+			showNotice(t("plugin_expired"));
 			return;
 		}
 		if (!(folder instanceof TFolder)) {
 			return;
 		}
-		const t = (x: TransItemType, vars?: any) => {
-			return this.i18n.t(x, vars);
-		};
 		new Confirm(
 			this.app,
 			t("publish_one_doc"),
@@ -363,7 +369,7 @@ export default class YdcDocPublisher extends Plugin {
 			return this.i18n.t(x, vars);
 		};
 		if (this.isSaaSMode() && !this.enable) {
-			showNotice("应用过期，插件不可用");
+			showNotice(t("plugin_expired"));
 			return;
 		}
 		new Confirm(
@@ -422,8 +428,11 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async handleRename(target: TAbstractFile, oldPath: string) {
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		if (this.isSaaSMode() && !this.enable) {
-			showNotice("应用过期，插件不可用");
+			showNotice(t("plugin_expired"));
 			return;
 		}
 		if (!(target instanceof TFile)) {
@@ -440,8 +449,11 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async handleRemove(target: TAbstractFile) {
+		const t = (x: TransItemType, vars?: any) => {
+			return this.i18n.t(x, vars);
+		};
 		if (this.isSaaSMode() && !this.enable) {
-			showNotice("应用过期，插件不可用");
+			showNotice(t("plugin_expired"));
 			return;
 		}
 		if (!(target instanceof TFile)) {
@@ -581,19 +593,21 @@ export default class YdcDocPublisher extends Plugin {
 	onunload() {}
 
 	async loadPluginStatus() {
+			const t = (x: TransItemType, vars?: any) => {
+				return this.i18n.t(x, vars);
+			};
+
 		const status = await this.requestHandler.getPluginStatus();
 
 		if (status === null) {
 			this.enable = false;
-			showNotice("获取插件状态失败，插件将无法使用，请稍后重启客户端后重试");
+			showNotice(t("plugin_not_available"));
 			return;
 		}
 
 		if (!status.enable) {
 			this.enable = false;
-			showNotice(
-				"【在线文档OB版应用】未购买或已过期，请稍购买/续费后重启客户端重试",
-			);
+			showNotice(t("plugin_not_purchase"));
 			return;
 		}
 
@@ -613,6 +627,7 @@ export default class YdcDocPublisher extends Plugin {
 			this.settings.lang = lang;
 			await this.saveSettings();
 		});
+		
 		if (this.isSaaSMode() && !this.settings.valid()) {
 			return;
 		}

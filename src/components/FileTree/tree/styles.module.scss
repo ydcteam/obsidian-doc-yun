@@ -1,0 +1,32 @@
+.treeZone {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #f0f0f0;
+}
+
+.node {
+    display: flex;
+    align-items: center;
+    margin: 0 12px 0 2px;
+    height: 100%;
+    line-height: 20px;
+    white-space: nowrap;
+}
+.nodeData {
+    margin-left: 5px;
+}
+.nodeArrow {
+    font-size: 20px;
+    margin-right: 5px;
+}
+.nodeIcon {
+    font-size: 24px;
+}
+
+.dropCursor {
+    width: 100%;
+    height: 0px;
+    border-top: 2px dotted white;
+    position: absolute;
+}
