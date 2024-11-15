@@ -5,9 +5,9 @@
 	"submit": "提交",
 	"publish_doc": "发布文档 {{{docName}}} 中...",
 	"canceled_publish_doc": "文档 {{{docName}}} 取消发布",
-	"publish_all_docs": "易东云-全部发布",
-	"publish_path_docs": "全部发布到易东云",
-	"publish_one_doc": "发布到易东云",
+	"publish_all_docs": "易东云助理 - 全部发布",
+	"publish_path_docs": "全部发布到易东云助理",
+	"publish_one_doc": "发布到易东云助理",
 	"publishing": "发布中...",
 	"publish_err": "文档发布失败",
 	"wait_for_publishing": "请等待之前的操作完成",
@@ -21,20 +21,20 @@
 	"cancel_batch_publish": "取消目录全部发布",
 	"cancel_all_publish": "取消仓库全部发布",
 
-	"confirm_publish_path_docs": "是否发布该目录的全部文档到易东云?",
-	"confirm_publish_all_docs": "是否发布仓库的全部文档到易东云?",
+	"confirm_publish_path_docs": "是否发布该目录的全部文档到易东云助理?",
+	"confirm_publish_all_docs": "是否发布仓库的全部文档到易东云助理?",
 
-	"setting_main_title": "【易东云】文档发布平台",
+	"setting_main_title": "【易东云助理】文档发布平台",
 	"setting_name": "设置",
 	"setting_extra_name": "扩展设置",
 
-	"setting_yidong_account": "易东云账号",
-	"setting_yidong_account_desc": "易东云登录账号名",
-	"setting_yidong_account_place_holder": "输入易东云账号",
+	"setting_yidong_account": "易东云助理账号",
+	"setting_yidong_account_desc": "易东云助理登录账号",
+	"setting_yidong_account_place_holder": "请输入易东云助理账号",
 
 	"setting_yidong_ob_publish_url": "发布地址",
-	"setting_yidong_ob_publish_url_desc": "易东云管理后台获取到的Obsidian发布地址",
-	"setting_yidong_ob_publish_url_place_holder": "输入地址",
+	"setting_yidong_ob_publish_url_desc": "从易东云助理会员中心获取到的Obsidian发布地址",
+	"setting_yidong_ob_publish_url_place_holder": "请输入地址",
 
 	"setting_yidong_api_key": "API Key",
 	"setting_yidong_api_key_desc": "用户认证KEY",
@@ -46,15 +46,15 @@
 
 	"setting_rename_auto_sync_main_title": "重命名文档操作自动同步",
 	"setting_rename_auto_sync": "自动同步",
-	"setting_rename_auto_sync_desc": "是否在后台自动同步已发布文档的重命名操作到易东云. 注意：启用后请重新启用插件才可生效.",
+	"setting_rename_auto_sync_desc": "是否自动同步文档标题的重命名操作到易东云助理，注意：启用后请重新启用插件才可生效。",
 	"setting_rename_auto_sync_freq": "自动同步频率",
-	"setting_rename_auto_sync_freq_desc": "自动同步重命名文档的时间频率，单位秒. 默认 3 秒一次. 如果频繁需要重命名，可以调到 1 秒.",
+	"setting_rename_auto_sync_freq_desc": "自动同步重命名文档的时间频率，单位秒，默认 3 秒一次，如果频繁需要重命名，可以调到 1 秒。",
 
 	"setting_remove_auto_sync_main_title": "删除文档操作自动同步",
 	"setting_remove_auto_sync": "自动同步",
-	"setting_remove_auto_sync_desc": "是否在后台自动同步已发布文档的删除操作到易东云. 注意：启用后请重新启用插件才可生效.",
+	"setting_remove_auto_sync_desc": "是否自动同步已发布文档的删除操作到易东云助理，注意：启用后请重新启用插件才可生效。",
 	"setting_remove_auto_sync_freq": "自动同步频率",
-	"setting_remove_auto_sync_freq_desc": "自动同步文档删除操作的时间频率，单位秒. 默认 3 秒一次. 如果频繁需要删除，可以调到 1 秒.",
+	"setting_remove_auto_sync_freq_desc": "自动同步文档删除操作的时间频率，单位秒，默认 3 秒一次，如果频繁需要删除，可以调到 1 秒。",
 
 	"setting_help_doc_main_title": "使用帮助",
 	"setting_help_doc_main_go_detail": "详情请阅读 - ",
@@ -91,7 +91,7 @@
 	"err_attach_oversize_skipped": "该附件类大小超过了限制，跳过：{{{filename}}}",
 
 	"manual_title": "访问下方的帮助文档获取使用教程",
-	"manual_link_text": "易东文档官网",
+	"manual_link_text": "易东助理官网"
 	
 	"plugin_lifetime_title": "应用有效期",
 	"plugin_lifetime_fmt_day": "YYYY年MM月DD日",

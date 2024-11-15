@@ -1,0 +1,145 @@
+name: Build plugin
+
+on:
+  push:
+    tags:
+      - "*-advance"
+
+env:
+  PLUGIN_NAME_DEP: obsidian-ydcpub-dep-advance
+  PLUGIN_NAME_SAAS: obsidian-ydcpub-saas-advance
+
+jobs:
+  build-saas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.x"
+      - name: Build
+        id: build
+        run: |
+          npm install -g yarn
+          yarn
+          make -f Makefile.SAAS all
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.ref }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}-saas
+          draft: false
+          prerelease: false
+      - name: Upload zip file
+        id: upload-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_DEP }}.zip
+          asset_name: ${{ env.PLUGIN_NAME_DEP }}.zip
+          asset_content_type: application/zip
+      - name: Upload main.js
+        id: upload-main
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_DEP }}/main.js
+          asset_name: main.js
+          asset_content_type: text/javascript
+      - name: Upload manifest.json
+        id: upload-manifest
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_DEP }}/manifest.json
+          asset_name: manifest.json
+          asset_content_type: application/json
+      - name: Upload styles.css
+        id: upload-styles
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_DEP }}/styles.css
+          asset_name: styles.css
+          asset_content_type: text/css
+
+  build-dep:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.x"
+      - name: Build
+        id: build
+        run: |
+          npm install -g yarn
+          yarn
+          make -f Makefile.YUN all
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.ref }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}-dep
+          draft: false
+          prerelease: false
+      - name: Upload zip file
+        id: upload-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_SAAS }}.zip
+          asset_name: ${{ env.PLUGIN_NAME_SAAS }}.zip
+          asset_content_type: application/zip
+      - name: Upload main.js
+        id: upload-main
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_SAAS }}/main.js
+          asset_name: main.js
+          asset_content_type: text/javascript
+      - name: Upload manifest.json
+        id: upload-manifest
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_SAAS }}/manifest.json
+          asset_name: manifest.json
+          asset_content_type: application/json
+      - name: Upload styles.css
+        id: upload-styles
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ env.PLUGIN_NAME_SAAS }}/styles.css
+          asset_name: styles.css
+          asset_content_type: text/css
