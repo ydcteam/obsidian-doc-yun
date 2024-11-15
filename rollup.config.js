@@ -22,7 +22,7 @@ console.info(`=====> Running build on env: ${process.env.NODE_ENV}`);
 const manifestStr = fs.readFileSync("manifest.json", "utf-8");
 const manifest = JSON.parse(manifestStr);
 console.info(
-	`=====> Starting build @mode:${process.env.mode}, @ver:${manifest.version}`,
+	`=====> Starting build @mode:${process.env.MODE}, @ver:${manifest.version}`,
 );
 
 const BASE_CONFIG = {
@@ -63,7 +63,7 @@ const getRollupPlugins = (...plugins) =>
 		injectProcessEnv(
 			{
 				NODE_ENV: process.env.NODE_ENV,
-				mode: process.env.mode,
+				MODE: process.env.MODE,
 				debugAuth: process.env.debugAuth,
 				debugMain: process.env.debugMain,
 				debugHttp: process.env.debugHttp,
@@ -100,7 +100,7 @@ const BUILD_CONFIG = {
 				targets: [
 					{
 						src:
-							process.env.mode === "saas"
+							process.env.MODE === "saas"
 								? "./manifest-saas.json"
 								: "./manifest.json",
 						rename: "manifest.json",

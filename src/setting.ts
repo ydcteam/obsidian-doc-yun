@@ -18,7 +18,7 @@ export interface Settings {
 	url: string;
 	getEntrypointUrl: (type: entryPontType) => string;
 	getToken(): string;
-	ydcAppId: string; // process.env.mode=SaaS
+	ydcAppId: string; // process.env.MODE=SaaS
 	apiKey: string;
 	apiSecret: string;
 

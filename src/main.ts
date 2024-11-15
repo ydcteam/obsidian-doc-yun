@@ -60,7 +60,7 @@ export default class YdcDocPublisher extends Plugin {
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
 		// if (this.debug) {console.debug("YdcDocPublisher load envs:", process.env);}
-		this.pluginMode = process.env.mode as PluginMode;
+		this.pluginMode = process.env.MODE as PluginMode;
 		console.info("YdcDocPublisher mode:", this.pluginMode);
 		if (process.env.debugMain) {
 			this.debug = true;
