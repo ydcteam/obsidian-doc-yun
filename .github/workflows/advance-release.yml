@@ -10,7 +10,7 @@ env:
   PLUGIN_NAME_SAAS: obsidian-ydcpub-saas
 
 jobs:
-  build-saas:
+  build-dep:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
         id: build
         run: |
           npm install -g yarn
-          make -f Makefile.SAAS all
+          make -f Makefile.YUN all
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -31,7 +31,7 @@ jobs:
           VERSION: ${{ github.ref }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}-saas
+          release_name: ${{ github.ref }}-dep
           draft: false
           prerelease: false
       - name: Upload zip file
@@ -87,7 +87,7 @@ jobs:
         id: build
         run: |
           npm install -g yarn
-          make -f Makefile.YUN all
+          make -f Makefile.SAAS all
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -96,7 +96,7 @@ jobs:
           VERSION: ${{ github.ref }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}-dep
+          release_name: ${{ github.ref }}-saas
           draft: false
           prerelease: false
       - name: Upload zip file
