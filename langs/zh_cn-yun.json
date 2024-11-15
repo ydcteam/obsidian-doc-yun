@@ -91,7 +91,7 @@
 	"err_attach_oversize_skipped": "该附件类大小超过了限制，跳过：{{{filename}}}",
 
 	"manual_title": "访问下方的帮助文档获取使用教程",
-	"manual_link_text": "易东助理官网"
+	"manual_link_text": "易东助理官网",
 	
 	"plugin_lifetime_title": "应用有效期",
 	"plugin_lifetime_fmt_day": "YYYY年MM月DD日",

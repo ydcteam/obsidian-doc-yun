@@ -91,5 +91,18 @@
 	"err_attach_oversize_skipped": "该附件类大小超过了限制，跳过：{{{filename}}}",
 
 	"manual_title": "访问下方的帮助文档获取使用教程",
-	"manual_link_text": "易东文档官网"
+	"manual_link_text": "易东文档官网",
+	
+	"plugin_lifetime_title": "应用有效期",
+	"plugin_lifetime_fmt_day": "YYYY年MM月DD日",
+	"plugin_lifetime_fmt_sec": "YYYY年MM月DD日 HH:mm:ss",
+	"plugin_get_started": "要开始使用，请先填写下面的配置项目，然后重新启用本插件",
+	"plugin_lifetime": "有效期剩余{{{remainingInDays}}}天，将于 {{{expireTimeStr}}} 到期!",
+
+	"plugin_expired": "插件过期，不可用! 请购买或续费!",
+	"plugin_not_available": "获取插件状态失败，插件将无法使用，请稍后重启客户端后重试!",
+	"plugin_not_purchase": "文档服务未购买或已过期，请稍购买/续费后重启客户端重试",
+
+	"req_err_expired":"请求失败，应用已过期或未购买",
+	"req_err_common":"请求失败"
 }
