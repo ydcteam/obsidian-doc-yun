@@ -7,46 +7,46 @@ changeLangFile:
 
 compress:
 	cd dist && \
-	zip -r obsidian-publish-ydcdep.zip obsidian-publish-ydcdep && \
-	shasum -a 256 obsidian-publish-ydcdep.zip > obsidian-publish-ydcdep.sha256sum
+	zip -r obsidian-ydcpub-dep.zip obsidian-ydcpub-dep && \
+	shasum -a 256 obsidian-ydcpub-dep.zip > obsidian-ydcpub-dep.sha256sum
 
 build: changeLangFile
 	yarn && \
 	yarn build && \
 	cd dist && \
-	mkdir -p obsidian-publish-ydcdep && \
-	mv -f ./main.js obsidian-publish-ydcdep/main.js && \
-	mv -f ./manifest.json obsidian-publish-ydcdep/manifest.json && \
-	mv -f ./styles.css obsidian-publish-ydcdep/styles.css
+	mkdir -p obsidian-ydcpub-dep && \
+	mv -f ./main.js obsidian-ydcpub-dep/main.js && \
+	mv -f ./manifest.json obsidian-ydcpub-dep/manifest.json && \
+	mv -f ./styles.css obsidian-ydcpub-dep/styles.css
 
 dev: changeLangFile
 	yarn && \
 	yarn dev && \
 	cd dist && \
-	mkdir -p obsidian-publish-ydcdep && \
-	mv -f ./main.js obsidian-publish-ydcdep/main.js && \
-	mv -f ./manifest.json obsidian-publish-ydcdep/manifest.json && \
-	mv -f ./styles.css obsidian-publish-ydcdep/styles.css
+	mkdir -p obsidian-ydcpub-dep && \
+	mv -f ./main.js obsidian-ydcpub-dep/main.js && \
+	mv -f ./manifest.json obsidian-ydcpub-dep/manifest.json && \
+	mv -f ./styles.css obsidian-ydcpub-dep/styles.css
 
 clean:
 	rm -rf dist/*
 	
 install: dev
-	mkdir -p /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-ydcdep && \
-	cp -f ./dist/obsidian-publish-ydcdep/main.js /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-ydcdep/main.js && \
-	cp -f ./dist/obsidian-publish-ydcdep/manifest.json /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-ydcdep/manifest.json && \
-	cp -f ./dist/obsidian-publish-ydcdep/styles.css  /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-publish-ydcdep/styles.css
+	mkdir -p /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-ydcpub-dep && \
+	cp -f ./dist/obsidian-ydcpub-dep/main.js /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-ydcpub-dep/main.js && \
+	cp -f ./dist/obsidian-ydcpub-dep/manifest.json /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-ydcpub-dep/manifest.json && \
+	cp -f ./dist/obsidian-ydcpub-dep/styles.css  /d/obsidianVaults/build_dev_new/.obsidian/plugins/obsidian-ydcpub-dep/styles.css
 
 install-1: dev
-	mkdir -p /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-ydcdep && \
-	cp -f ./dist/obsidian-publish-ydcdep/main.js /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-ydcdep/main.js && \
-	cp -f ./dist/obsidian-publish-ydcdep/manifest.json /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-ydcdep/manifest.json && \
-	cp -f ./dist/obsidian-publish-ydcdep/styles.css  /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-publish-ydcdep/styles.css
+	mkdir -p /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-ydcpub-dep && \
+	cp -f ./dist/obsidian-ydcpub-dep/main.js /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-ydcpub-dep/main.js && \
+	cp -f ./dist/obsidian-ydcpub-dep/manifest.json /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-ydcpub-dep/manifest.json && \
+	cp -f ./dist/obsidian-ydcpub-dep/styles.css  /d/obsidianVaults/build_dev/.obsidian/plugins/obsidian-ydcpub-dep/styles.css
 
 install-back: dev
-	mkdir -p /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-ydcdep && \
-	cp -f ./dist/obsidian-publish-ydcdep/main.js /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-ydcdep/main.js && \
-	cp -f ./dist/obsidian-publish-ydcdep/manifest.json /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-ydcdep/manifest.json && \
-	cp -f ./dist/obsidian-publish-ydcdep/styles.css  /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-publish-ydcdep/styles.css
+	mkdir -p /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-ydcpub-dep && \
+	cp -f ./dist/obsidian-ydcpub-dep/main.js /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-ydcpub-dep/main.js && \
+	cp -f ./dist/obsidian-ydcpub-dep/manifest.json /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-ydcpub-dep/manifest.json && \
+	cp -f ./dist/obsidian-ydcpub-dep/styles.css  /d/obsidianVaults/pv_back_dev/.obsidian/plugins/obsidian-ydcpub-dep/styles.css
 
 .PHONY: all changeLangFile dev build compress clean install install-1 install-back
