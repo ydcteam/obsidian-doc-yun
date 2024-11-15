@@ -1,13 +1,13 @@
-name: Build plugin
+name: Build all plugin
 
 on:
   push:
     tags:
-      - "*-advance"
+      - "[0-9]+.[0-9]+.[0-9]+-advance"
 
 env:
-  PLUGIN_NAME_DEP: obsidian-ydcpub-dep-advance
-  PLUGIN_NAME_SAAS: obsidian-ydcpub-saas-advance
+  PLUGIN_NAME_DEP: obsidian-ydcpub-dep
+  PLUGIN_NAME_SAAS: obsidian-ydcpub-saas
 
 jobs:
   build-saas:
