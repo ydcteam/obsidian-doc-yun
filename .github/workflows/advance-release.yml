@@ -3,7 +3,7 @@ name: Build all plugin
 on:
   push:
     tags:
-      - 'advance**'
+      - '*'
 
 env:
   PLUGIN_NAME_DEP: obsidian-ydcpub-dep
