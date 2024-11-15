@@ -3,7 +3,7 @@ name: Build all plugin
 on:
   push:
     tags:
-      - '*'
+      - 'advance**'
 
 env:
   PLUGIN_NAME_DEP: obsidian-ydcpub-dep
@@ -75,7 +75,7 @@ jobs:
           asset_name: styles.css
           asset_content_type: text/css
 
-  build-dep:
+  build-saas:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
