@@ -2,9 +2,9 @@
 	"id": "ydcpub-saas",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"name": "YiDongCloud SaaS publish",
-	"description": "Publish your notes to the Web provided by YiDong Cloud SaaS platform.",
-	"author": "YiDong Cloud 易东云网络科技",
+	"name": "YDC Publish SaaS",
+	"description": "一键发布笔记到【易东文档】SaaS平台生成文档型网站. Publish your notes to generate website on YDC SaaS.",
+	"author": "YDC 易东云网络",
 	"authorUrl": "https://doc.ydc.show",
 	"isDesktopOnly": false
 }

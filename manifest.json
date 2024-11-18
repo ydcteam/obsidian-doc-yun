@@ -2,9 +2,9 @@
 	"id": "ydcpub-dep",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"name": "YiDongCloud Publish",
-	"description": "Publish your notes to the Web provided by YiDong Cloud platform.",
-	"author": "YiDong Cloud 易东云网络科技",
-	"authorUrl": "https://yun.yidong.site",
+	"name": "YDC Publish Dep",
+	"description": "一键发布笔记到【易东云助理】平台生成文档型网站. Publish your notes to generate website on YDC Yun.",
+	"author": "YDC 易东云网络",
+	"authorUrl": "https://doc.ydc.show",
 	"isDesktopOnly": false
 }
