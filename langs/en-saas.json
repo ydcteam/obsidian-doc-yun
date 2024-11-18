@@ -44,6 +44,10 @@
 	"setting_yidong_api_secret_desc": "Access key secret from YiDong platform admin page",
 	"setting_yidong_api_secret_place_holder": "Input access key secret...",
 
+	"setting_yidong_saas_app_id": "AppId",
+	"setting_yidong_saas_app_id_desc": "AppId from YDC SaaS",
+	"setting_yidong_saas_app_id_place_holder": "Input app id...",
+
 	"setting_rename_auto_sync_main_title": "Note Rename Auto-Sync Setting",
 	"setting_rename_auto_sync": "Auto Sync",
 	"setting_rename_auto_sync_desc": "Enable to auto sync note rename operation to YiDong platform. Note: You need to restart Obsidian when enable.",

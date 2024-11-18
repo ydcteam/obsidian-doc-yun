@@ -44,6 +44,10 @@
 	"setting_yidong_api_secret_desc": "Access key secret from YiDong platform admin page",
 	"setting_yidong_api_secret_place_holder": "Input access key secret...",
 
+	"setting_yidong_saas_app_id": "AppId",
+	"setting_yidong_saas_app_id_desc": "AppId from YDC SaaS",
+	"setting_yidong_saas_app_id_place_holder": "Input app id...",
+
 	"setting_rename_auto_sync_main_title": "Note Rename Auto-Sync Setting",
 	"setting_rename_auto_sync": "Auto Sync",
 	"setting_rename_auto_sync_desc": "Enable to auto sync note rename operation to YiDong platform. Note: You need to restart Obsidian when enable.",
@@ -93,15 +97,15 @@
 	"manual_title": "You can find manual and docs below.",
 	"manual_link_text": "Visit YiDong Platform Home Page",
 
-	"plugin_expired": "Plugin expired!",
-	"plugin_not_available": "Plugin unavailable please check remote service status",
-	"plugin_not_purchase": "Remote service not purchase or expired.",
-
 	"plugin_lifetime_title": "Plugin Available Until",
 	"plugin_lifetime_fmt_day": "YYYY MM DD",
 	"plugin_lifetime_fmt_sec": "YYYY MM DD HH:mm:ss",
 	"plugin_get_started": "To get started fill in the settings below and restart Obsidian.",
 	"plugin_lifetime": "Available for {{{remainingInDays}}} days. Expires at {{{expireTimeStr}}}.",
+
+	"plugin_expired": "Plugin expired!",
+	"plugin_not_available": "Plugin unavailable please check remote service status.",
+	"plugin_not_purchase": "Remote service not purchase or expired.",
 
 	"req_err_expired": "Request failed, service not purchased or expired.",
 	"req_err_common": "Request failed"

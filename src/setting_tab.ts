@@ -151,6 +151,21 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 					}),
 			);
 
+		if (this.isSaaSMode()) {
+			new Setting(mainDoc)
+				.setName(this.t("setting_yidong_saas_app_id"))
+				.setDesc(this.t("setting_yidong_saas_app_id_desc"))
+				.addText((text) =>
+					text
+						.setPlaceholder(this.t("setting_yidong_saas_app_id_place_holder"))
+						.setValue(this.plugin.settings.ydcAppId)
+						.onChange(async (value) => {
+							this.plugin.settings.ydcAppId = value.trim();
+							await this.plugin.saveSettings();
+						}),
+				);
+		}
+		
 		mainDoc.createEl("h3", { text: this.t("setting_extra_name") });
 
 		mainDoc.createEl("h4", {

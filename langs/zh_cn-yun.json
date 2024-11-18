@@ -44,6 +44,10 @@
 	"setting_yidong_api_secret_desc": "用户认证密钥",
 	"setting_yidong_api_secret_place_holder": "请输入认证密钥",
 
+	"setting_yidong_saas_app_id": "易东文档应用客户端ID",
+	"setting_yidong_saas_app_id_desc": "从易东文档平台租户后台的应用中心获取到的客户端ID",
+	"setting_yidong_saas_app_id_place_holder": "输入应用ID",
+
 	"setting_rename_auto_sync_main_title": "重命名文档操作自动同步",
 	"setting_rename_auto_sync": "自动同步",
 	"setting_rename_auto_sync_desc": "是否自动同步文档标题的重命名操作到易东云助理，注意：启用后请重新启用插件才可生效。",
