@@ -90,9 +90,9 @@
 	"err_attach_no_support": "不支持该附件类型：{{{filename}}} ",
 	"err_attach_oversize_skipped": "该附件类大小超过了限制，跳过：{{{filename}}}",
 
-	"manual_title": "访问下方的帮助文档获取使用教程",
-	"manual_link_text": "易东助理官网",
-	
+	"manual_title": "极速搭建以内容为核心的文档型官网；编辑和发布分离，更少维护时间却更高效率；融合更多组件弹扩展功能；网页模版快速搭建页面，零基础用户也可高效维护；为用户带来更友好建站体验！",
+	"manual_link_text": "易东云助理官网",
+
 	"plugin_lifetime_title": "应用有效期",
 	"plugin_lifetime_fmt_day": "YYYY年MM月DD日",
 	"plugin_lifetime_fmt_sec": "YYYY年MM月DD日 HH:mm:ss",
@@ -103,6 +103,6 @@
 	"plugin_not_available": "获取插件状态失败，插件将无法使用，请稍后重启客户端后重试!",
 	"plugin_not_purchase": "文档服务未购买或已过期，请稍购买/续费后重启客户端重试",
 
-	"req_err_expired":"请求失败，应用已过期或未购买",
-	"req_err_common":"请求失败"
+	"req_err_expired": "请求失败，应用已过期或未购买",
+	"req_err_common": "请求失败"
 }
