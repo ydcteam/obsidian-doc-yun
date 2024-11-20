@@ -4,7 +4,8 @@ import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 import { I18n, TransItemType } from "./i18n";
-import { http_get, http_post_form, http_post_json } from "./http_wrapper";
+import xFormData from "form-data";
+import { http_get, http_post_formdata, http_post_json } from "./http_wrapper";
 
 export interface RenameDocumentData {
 	file: string;
@@ -181,7 +182,7 @@ export class Http {
 
 			const rsp = await http_get(
 				this.config.settings.getEntrypointUrl("attachConf"),
-				{ headers: params.headers},
+				{ headers: params.headers },
 			);
 			if (this.isDebug()) {
 				console.debug("获取文档附件配置 请求结果:", rsp);
@@ -219,9 +220,9 @@ export class Http {
 		}
 	};
 
-	stringifyFormData(data: FormData): string {
+	stringifyFormData(data: Record<string, any>): string {
 		const object: { [key: string]: any } = {};
-		data.forEach((value, key) => {
+		data.forEach((value: any, key: string) => {
 			// 保证和PHP的一致性.
 			if (typeof value === "string") {
 				value = value.trim();
@@ -274,11 +275,11 @@ export class Http {
 		param: CheckAttachmentHashData,
 	): Promise<CheckAttachmentResult | null> => {
 		try {
-			let form = new FormData();
-			form.set("docName", param.docName);
-			form.set("vault", param.vault);
-			form.set("hash", param.hash);
-			form.set("fileName", param.fileName);
+			let form = new xFormData();
+			form.append("docName", param.docName);
+			form.append("vault", param.vault);
+			form.append("hash", param.hash);
+			form.append("fileName", param.fileName);
 
 			const params: AuthParam = {
 				headers: {
@@ -295,7 +296,7 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await http_post_form(
+			const rsp = await http_post_formdata(
 				this.config.settings.getEntrypointUrl("chkAttach"),
 				{
 					headers: params.headers,
@@ -347,7 +348,7 @@ export class Http {
 	 */
 	publishDocument = async (data: PublishDocumentData): Promise<boolean> => {
 		try {
-			let form = new FormData();
+			let form = new xFormData();
 			form.append("content", data.content);
 			form.append("fileName", data.fileName);
 			form.append("vault", data.vault);
@@ -381,7 +382,7 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await http_post_form(
+			const rsp = await http_post_formdata(
 				this.config.settings.getEntrypointUrl("publish"),
 				{
 					headers: params.headers,

@@ -1,18 +1,27 @@
 import { requestUrl } from "obsidian";
+import xFormData from "form-data";
 
 export type HttpGETParam = {
 	headers?: Record<string, string>;
 	queries?: Record<string, string>;
 };
 
-export type HttpPOSTParam = HttpGETParam & {
-	data?: FormData|any;
+export type HttpJSONParam = HttpGETParam & {
+	data?: any;
+};
+
+export type HttpFormDataParam = HttpGETParam & {
+	data: xFormData;
+};
+
+export type HttpJSONRsp = {
+	data: any;
 };
 
 export async function http_get(
 	url: string,
 	params?: HttpGETParam,
-): Promise<any> {
+): Promise<HttpJSONRsp> {
 	if (params?.queries) {
 		const searchParams = new URLSearchParams(params.queries);
 		url = `${url}?${searchParams.toString()}`;
@@ -23,10 +32,13 @@ export async function http_get(
 		headers: params.headers,
 	});
 
-	return rsp.json;
+	return { data: rsp.json };
 }
 
-export async function http_post_json(url: string, params: HttpPOSTParam) {
+export async function http_post_json(
+	url: string,
+	params: HttpJSONParam,
+): Promise<HttpJSONRsp> {
 	if (params.queries) {
 		const searchParams = new URLSearchParams(params.queries);
 		url = `${url}?${searchParams.toString()}`;
@@ -39,23 +51,26 @@ export async function http_post_json(url: string, params: HttpPOSTParam) {
 		body: JSON.stringify(params.data),
 	});
 
-	return rsp.json;
+	return { data: rsp.json };
 }
 
-export async function http_post_form(url: string, params: HttpPOSTParam) {
-	if (params?.queries) {
+export async function http_post_formdata(
+	url: string,
+	params: HttpFormDataParam,
+): Promise<HttpJSONRsp> {
+	console.debug("http_post_formdata params", params);
+	if (params.queries) {
 		const searchParams = new URLSearchParams(params.queries);
 		url = `${url}?${searchParams.toString()}`;
 	}
-	
+
 	const rsp = await requestUrl({
 		url: url,
 		method: "POST",
-		// NOTE: leave it for SDK to fill in.
-		// contentType: "multipart/form-data",
+		contentType: "multipart/form-data; boundary=" + params.data.getBoundary(),
 		headers: params.headers,
-		body: params.data
+		body: params.data.getBuffer(),
 	});
 
-	return rsp.json;
+	return { data: rsp.json };
 }

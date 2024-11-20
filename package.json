@@ -9,7 +9,7 @@
 	],
 	"type": "module",
 	"scripts": {
-		"dev": "cross-env NODE_ENV=development MODE=yun rollup --config rollup.config.js",
+		"dev": "cross-env NODE_ENV=development MODE=yun debugHttp=1 debugMain=1 debugAuth=1 rollup --config rollup.config.js",
 		"build": "cross-env NODE_ENV=production MODE=yun rollup --config rollup.config.js"
 	},
 	"private": "true",
@@ -21,6 +21,7 @@
 		"clsx": "^2.1.1",
 		"cssnano": "^7.0.6",
 		"echarts": "^5.5.1",
+		"form-data": "^4.0.1",
 		"js-base64": "^3.7.7",
 		"js-yaml": "^4.1.0",
 		"lodash": "^4.17.21",
