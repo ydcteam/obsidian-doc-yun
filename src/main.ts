@@ -216,9 +216,6 @@ export default class YdcDocPublisher extends Plugin {
 
 	async publishSingleDocument(file: TFile) {
 		const attachConfig = await this.requestHandler.getAttachConfig();
-		if (this.debug) {
-			console.debug(`attach config: ${attachConfig}`);
-		}
 		await this.publishDocument(file, attachConfig);
 	}
 
@@ -259,10 +256,6 @@ export default class YdcDocPublisher extends Plugin {
 				}
 
 				const attachConfig = await this.requestHandler.getAttachConfig();
-				if (this.debug) {
-					console.debug(`attach config: ${attachConfig}`);
-				}
-
 				for (let i = 0; i < files.length; i++) {
 					log(`publishing ${files[i].name} ...`);
 					try {
@@ -319,9 +312,6 @@ export default class YdcDocPublisher extends Plugin {
 				}
 
 				const attachConfig = await this.requestHandler.getAttachConfig();
-				if (this.debug) {
-					console.debug(`attach config:`, attachConfig);
-				}
 
 				for (let i = 0; i < files.length; i++) {
 					log(`publishing ${files[i].name} ...`);

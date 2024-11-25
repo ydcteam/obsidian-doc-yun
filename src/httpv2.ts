@@ -4,8 +4,7 @@ import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 import { I18n, TransItemType } from "./i18n";
-import xFormData from "form-data";
-import { http_get, http_post_formdata, http_post_json } from "./http_wrapper";
+import { http_get, http_post_formdata, http_post_json, SFormData } from "./http_wrapper";
 
 export interface RenameDocumentData {
 	file: string;
@@ -114,7 +113,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "application/json; charset=utf8",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -220,7 +218,7 @@ export class Http {
 		}
 	};
 
-	stringifyFormData(data: Record<string, any>): string {
+	stringifyFormData(data: SFormData): string {
 		const object: { [key: string]: any } = {};
 		data.forEach((value: any, key: string) => {
 			// 保证和PHP的一致性.
@@ -275,7 +273,7 @@ export class Http {
 		param: CheckAttachmentHashData,
 	): Promise<CheckAttachmentResult | null> => {
 		try {
-			let form = new xFormData();
+			let form = new SFormData();
 			form.append("docName", param.docName);
 			form.append("vault", param.vault);
 			form.append("hash", param.hash);
@@ -283,7 +281,6 @@ export class Http {
 
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -348,14 +345,13 @@ export class Http {
 	 */
 	publishDocument = async (data: PublishDocumentData): Promise<boolean> => {
 		try {
-			let form = new xFormData();
+			let form = new SFormData();
 			form.append("content", data.content);
 			form.append("fileName", data.fileName);
 			form.append("vault", data.vault);
 
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -443,7 +439,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -517,7 +512,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),

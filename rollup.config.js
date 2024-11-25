@@ -40,7 +40,6 @@ const BASE_CONFIG = {
 		"@lezer/highlight",
 		"@lezer/lr",
 		"obsidian",
-		"crypto",
 	],
 };
 
