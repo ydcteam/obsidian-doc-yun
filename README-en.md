@@ -26,6 +26,10 @@ Rapidly build a document-oriented website, integrating the website and online do
 
 ![publish demo](https://pic.ydc.asia/doc/doclaunch-en.png)
 
+### Contact us
+
+![个人微信二维码](https://src.ydc.asia/webpic/qr_wx_don.png)
+
 ---
 
 ### END

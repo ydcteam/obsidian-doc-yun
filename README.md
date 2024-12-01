@@ -25,4 +25,10 @@
 
 ![发布流程图](https://pic.ydc.asia/doc/doclaunch.png)
 
+### 联系我们
+
+![个人微信二维码](https://src.ydc.asia/webpic/qr_wx_don.png)
+
+---
+
 ### END
