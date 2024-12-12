@@ -10,9 +10,11 @@ export const getSyncAllIconSvg = () => {
 	const iconSvgSyncRunning = createElement(FolderUp);
 	iconSvgSyncRunning.setAttribute("width", "100");
 	iconSvgSyncRunning.setAttribute("height", "100");
+	const s1 = new XMLSerializer();
+	const s2 = new XMLSerializer();
 	const res = {
-		iconSvgSyncWait: iconSvgSyncWait.outerHTML,
-		iconSvgSyncRunning: iconSvgSyncRunning.outerHTML,
+		iconSvgSyncWait: s1.serializeToString(iconSvgSyncWait),
+		iconSvgSyncRunning: s2.serializeToString(iconSvgSyncRunning),
 	};
 
 	iconSvgSyncWait.empty();
