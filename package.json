@@ -9,7 +9,8 @@
 	],
 	"type": "module",
 	"scripts": {
-		"dev": "cross-env NODE_ENV=development MODE=yun debugHttp=1 debugMain=1 debugAuth=1 rollup --config rollup.config.js",
+		"dev": "cross-env NODE_ENV=development MODE=yun debugHttp=1 debugMain=1 rollup --config rollup.config.js",
+		"devAuth": "cross-env NODE_ENV=development MODE=yun debugHttp=1 debugMain=1 debugAuth=1 rollup --config rollup.config.js",
 		"build": "cross-env NODE_ENV=production MODE=yun rollup --config rollup.config.js"
 	},
 	"private": "true",

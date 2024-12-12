@@ -244,6 +244,11 @@ export default class YdcDocPublisher extends Plugin {
 					return;
 				}
 
+				const attachConfig = await this.requestHandler.getAttachConfig();
+				if (attachConfig === null) {
+					return;
+				}
+
 				const pn = progress(t("start_batch_publish"));
 
 				this.syncStatus = "syncing";
@@ -255,7 +260,7 @@ export default class YdcDocPublisher extends Plugin {
 					);
 				}
 
-				const attachConfig = await this.requestHandler.getAttachConfig();
+
 				for (let i = 0; i < files.length; i++) {
 					log(`publishing ${files[i].name} ...`);
 					try {
@@ -300,6 +305,12 @@ export default class YdcDocPublisher extends Plugin {
 					return;
 				}
 
+				const attachConfig = await this.requestHandler.getAttachConfig();
+				if (attachConfig === null) {
+					return;
+				}
+
+
 				const pn = progress(t("start_all_publish"));
 
 				this.syncStatus = "syncing";
@@ -311,7 +322,6 @@ export default class YdcDocPublisher extends Plugin {
 					);
 				}
 
-				const attachConfig = await this.requestHandler.getAttachConfig();
 
 				for (let i = 0; i < files.length; i++) {
 					log(`publishing ${files[i].name} ...`);
