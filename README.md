@@ -27,7 +27,9 @@
 
 ### 联系我们
 
-![个人微信二维码](https://src.ydc.asia/webpic/qr_wx_don.png)
+<div style="text-align: center;">
+    <img src="https://src.ydc.asia/webpic/qr_wx_don.png" alt="" style="width: 30%;">
+</div>
 
 ---
 
