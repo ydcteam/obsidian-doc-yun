@@ -1,10 +1,15 @@
 import { notify } from "@/utils";
-import axios from "axios";
 import { NetworkError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
 import moment from "moment";
 import { I18n, TransItemType } from "./i18n";
+import {
+	FormDataContent,
+	http_get,
+	http_post_formdata,
+	http_post_json,
+} from "./http_wrapper";
 
 export interface RenameDocumentData {
 	file: string;
@@ -113,7 +118,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "application/json; charset=utf8",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -123,10 +127,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_get(
 				this.config.settings.getEntrypointUrl("chkPublished"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					queries: { fileName: data.fileName, vault: data.vault },
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("查询文件发布状态请求结果:", rsp);
@@ -177,9 +183,9 @@ export class Http {
 			const auth = await this.auth.authorization("GET", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.get(
+			const rsp = await http_get(
 				this.config.settings.getEntrypointUrl("attachConf"),
-				params,
+				{ headers: params.headers },
 			);
 			if (this.isDebug()) {
 				console.debug("获取文档附件配置 请求结果:", rsp);
@@ -217,42 +223,32 @@ export class Http {
 		}
 	};
 
-	stringifyFormData(data: FormData): string {
+	// 不支持文件Blog.
+	// 保证请求参数和PHP的一致性.
+	stringifyFormData(data: FormDataContent): string {
 		const object: { [key: string]: any } = {};
-		data.forEach((value, key) => {
-			// 保证和PHP的一致性.
-			if (typeof value === "string") {
-				value = value.trim();
+		for (const key in data) {
+			if (data[key].length < 1) {
+				continue;
 			}
 
-			// key格式: xxx[] 的数组.
-			if (key.endsWith("[]")) {
-				const newKey = key.replace(/\[\]$/, "");
-				if (Array.isArray(object[newKey])) {
-					object[newKey].push(value);
-					return;
-				}
-
-				object[newKey] = [value];
-				return;
-			}
-
-			// 第一赋值，还不确定是数组.
-			if (!Reflect.has(object, key)) {
+			let value = "";
+			if (data[key].length == 1 && typeof data[key][0] === "string") {
+				value = data[key][0].trim();
 				object[key] = value;
-				return;
-			}
+			} else {
+				data[key].forEach((ele) => {
+					if (typeof ele === "string") {
+						if (Array.isArray(object[key])) {
+							object[key].push(ele);
+							return;
+						}
 
-			// 第二次赋值，即视为数组，key格式: xxx.
-			if (!Array.isArray(object[key])) {
-				// 属性替换为数组.
-				object[key] = [value];
-				return;
+						object[key] = [value];
+					}
+				});
 			}
-
-			// 数组增加下一个值.
-			object[key].push(value);
-		});
+		}
 
 		const js = JSON.stringify(object);
 		if (this.isDebug()) {
@@ -272,15 +268,14 @@ export class Http {
 		param: CheckAttachmentHashData,
 	): Promise<CheckAttachmentResult | null> => {
 		try {
-			let form = new FormData();
-			form.set("docName", param.docName);
-			form.set("vault", param.vault);
-			form.set("hash", param.hash);
-			form.set("fileName", param.fileName);
+			const form: FormDataContent = {};
+			form["docName"] = [param.docName];
+			form["vault"] = [param.vault];
+			form["hash"] = [param.hash];
+			form["fileName"] = [param.fileName];
 
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -293,10 +288,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_formdata(
 				this.config.settings.getEntrypointUrl("chkAttach"),
-				form,
-				params,
+				{
+					headers: params.headers,
+					data: form,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("附件检查请求结果:", rsp);
@@ -343,14 +340,15 @@ export class Http {
 	 */
 	publishDocument = async (data: PublishDocumentData): Promise<boolean> => {
 		try {
-			let form = new FormData();
-			form.append("content", data.content);
-			form.append("fileName", data.fileName);
-			form.append("vault", data.vault);
+			console.info("publishDocument -> data:", data);
+
+			const form: FormDataContent = {};
+			form["content"] = [data.content];
+			form["fileName"] = [data.fileName];
+			form["vault"] = [data.vault];
 
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -359,7 +357,12 @@ export class Http {
 
 			if (data.attachsUploaded) {
 				for (const attachId of data.attachsUploaded) {
-					form.append("attachsUploaded[]", `${attachId}`);
+					if (form["attachsUploaded"]) {
+						// @ts-expect-error: fine
+						form["attachsUploaded"].push(`${attachId}`);
+						continue;
+					}
+					form["attachsUploaded[]"] = [`${attachId}`];
 				}
 			}
 
@@ -367,20 +370,35 @@ export class Http {
 			params.headers["x-doc-content-sha256"] = await this.auth.getSha256HashHex(
 				this.stringifyFormData(form),
 			);
-
 			if (data.attachs) {
 				for (const attach of data.attachs) {
-					form.append("attachs[]", new Blob([attach.buf]), attach.filename);
+					if (form["attachs"]) {
+						// @ts-expect-error: fine
+						form["attachs"].push({
+							fileName: attach.filename,
+							fileData: attach.buf,
+						});
+						continue;
+					}
+
+					form["attachs"] = [
+						{
+							fileName: attach.filename,
+							fileData: attach.buf,
+						},
+					];
 				}
 			}
 
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_formdata(
 				this.config.settings.getEntrypointUrl("publish"),
-				form,
-				params,
+				{
+					headers: params.headers,
+					data: form,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("publishDocument 请求结果:", rsp);
@@ -436,7 +454,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -449,10 +466,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_json(
 				this.config.settings.getEntrypointUrl("rename"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					data: data,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("发布请求结果:", rsp);
@@ -508,7 +527,6 @@ export class Http {
 		try {
 			const params: AuthParam = {
 				headers: {
-					"Content-Type": "multipart/form-data",
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
 					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -521,10 +539,12 @@ export class Http {
 			const auth = await this.auth.authorization("POST", params);
 			params.headers["Authorization"] = auth;
 
-			const rsp = await axios.post(
+			const rsp = await http_post_json(
 				this.config.settings.getEntrypointUrl("remove"),
-				data,
-				params,
+				{
+					headers: params.headers,
+					data: data,
+				},
 			);
 			if (this.isDebug()) {
 				console.debug("移除文档请求结果:", rsp);

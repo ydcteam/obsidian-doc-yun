@@ -84,6 +84,18 @@ function sanitizePermalink(permalink: string): string {
 	return permalink;
 }
 
+const generateRandomString = (length: number = 6): string => {
+	const characters = "ijklmnopqrstuvabcdefghijklmnopqrstuvwxyz123456789";
+	let randomString = "";
+
+	for (let i = 0; i < length; i++) {
+		const randomIndex = Math.floor(Math.random() * characters.length);
+		randomString += characters.charAt(randomIndex);
+	}
+
+	return randomString;
+};
+
 export {
 	arrayBufferToBase64,
 	extractBaseUrl,
@@ -92,4 +104,5 @@ export {
 	escapeRegExp,
 	fixSvgForXmlSerializer,
 	sanitizePermalink,
+	generateRandomString,
 };

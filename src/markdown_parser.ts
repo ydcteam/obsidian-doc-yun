@@ -4,7 +4,7 @@ import {
 	AttachConfig,
 	CheckAttachmentResult,
 	PublishDocumentAttachData,
-} from "@/http";
+} from "@/httpv2";
 import { App, TFile, getLinkpath } from "obsidian";
 import * as SparkMD5 from "spark-md5";
 import { AttachmentError, NoticeError } from "@/errors";
