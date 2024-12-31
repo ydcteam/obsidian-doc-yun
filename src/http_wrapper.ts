@@ -25,10 +25,6 @@ export type HttpJSONRsp = {
 	data: any;
 };
 
-// https://httpbin.org/anything
-
-// https://yun.yidong.site/api/ydcdoc/v1/obsidian/a/5TbmjTuIXseCyeVImN9oVm8-
-
 export async function http_get(
 	url: string,
 	params?: HttpGETParam,
@@ -69,7 +65,7 @@ export async function http_post_formdata(
 	url: string,
 	params: HttpFormDataParam,
 ): Promise<HttpJSONRsp> {
-	console.info("http_post_formdata params", params);
+	// console.info("http_post_formdata params", params);
 	if (params.queries) {
 		const searchParams = new URLSearchParams(params.queries);
 		url = `${url}?${searchParams.toString()}`;
@@ -130,7 +126,7 @@ const buildFormData = (
 		postData = appendArrayBuffer(postData, vd);
 	}
 
-	// console.info("buildFormData -> data length:", postData.length);
+	// // console.info("buildFormData -> data length:", postData.length);
 
 	let rawData: string | ArrayBuffer = "";
 	if (postData != null) {
@@ -174,7 +170,7 @@ const buildFormDataFileField = (
 	// RFC 7578: https://datatracker.ietf.org/doc/html/rfc7578#section-4.1
 	const nextBoundary = "--" + boundary + "\r\n";
 
-	console.info("buildFormDataFileField -> data:", data);
+	// console.info("buildFormDataFileField -> data:", data);
 
 	if (data.length == 1) {
 		const f = data[0];
@@ -184,7 +180,7 @@ const buildFormDataFileField = (
 		// mark as file.
 		content += "Content-Type: application/octet-stream" + "\r\n\r\n";
 
-		console.info("buildFormDataFileField -> formDataString:", content);
+		// console.info("buildFormDataFileField -> formDataString:", content);
 
 		// string to unicode.
 		const contentEncoded = new TextEncoder().encode(content);
@@ -199,7 +195,7 @@ const buildFormDataFileField = (
 			// mark as file.
 			content += "Content-Type: application/octet-stream" + "\r\n\r\n";
 
-			console.info("buildFormDataFileField -> formDataString:", content);
+			// console.info("buildFormDataFileField -> formDataString:", content);
 
 			// string to unicode.
 			const contentEncoded = new TextEncoder().encode(content);
@@ -230,7 +226,7 @@ const buildFormDataStringField = (
 		content +=
 			`Content-Disposition: form-data; name="${name}"\r\n\r\n` + `${data}\r\n`;
 
-		console.info("buildFormDataStringField -> formDataString:", content);
+		// console.info("buildFormDataStringField -> formDataString:", content);
 
 		const contentEncoded = new TextEncoder().encode(content);
 
@@ -243,7 +239,7 @@ const buildFormDataStringField = (
 				`Content-Disposition: form-data; name="${name}[]"\r\n\r\n` +
 				`${vv}\r\n`;
 
-			console.info("buildFormDataStringField -> formDataString:", content);
+			// console.info("buildFormDataStringField -> formDataString:", content);
 
 			const contentEncoded = new TextEncoder().encode(content);
 
@@ -298,10 +294,10 @@ const buildFormDataStringField = (
 
 // 	requestUrl(options)
 // 		.then((response) => {
-// 			console.log(response);
+// 			// console.log(response);
 // 		})
 // 		.catch((error) => {
-// 			console.error(error);
+// 			// console.error(error);
 // 		});
 // }
 

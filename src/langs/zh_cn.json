@@ -24,9 +24,8 @@
 	"confirm_publish_path_docs": "是否发布该目录的全部文档到易东云?",
 	"confirm_publish_all_docs": "是否发布仓库的全部文档到易东云?",
 
-	"setting_main_title": "【易东云】文档发布平台",
-	"setting_name": "设置",
-	"setting_extra_name": "扩展设置",
+	"setting_name": "凭证",
+	"setting_extra_name": "同步",
 
 	"setting_yidong_account": "易东云账号",
 	"setting_yidong_account_desc": "易东云登录账号名",

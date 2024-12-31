@@ -1,16 +1,11 @@
-import {
-	getSyncAllIconSvg,
-	iconNameSyncAllRunning,
-	iconNameSyncAllWait,
-} from "@/icons/index";
-import { log, notify, showNotice, progress } from "@/utils";
+import { notify, showNotice, progress } from "@/utils";
 import {
 	Http,
 	AttachConfig,
 	RenameDocumentData,
 	PublishDocumentData,
 	RemoveDocumentData,
-} from "@/httpv2";
+} from "@/http";
 import {
 	App,
 	Plugin,
@@ -18,7 +13,6 @@ import {
 	TAbstractFile,
 	TFile,
 	TFolder,
-	addIcon,
 	setIcon,
 } from "obsidian";
 import { Confirm } from "@/dialog";
@@ -57,11 +51,6 @@ export default class YdcDocPublisher extends Plugin {
 	}
 
 	async onload() {
-		const { iconSvgSyncWait, iconSvgSyncRunning } = getSyncAllIconSvg();
-
-		addIcon(iconNameSyncAllWait, iconSvgSyncWait);
-		addIcon(iconNameSyncAllRunning, iconSvgSyncRunning);
-
 		await this.prepareSettingAndRequestHandler();
 
 		await this.preparePlugin();
@@ -84,7 +73,7 @@ export default class YdcDocPublisher extends Plugin {
 		};
 
 		this.syncRibbon = this.addRibbonIcon(
-			iconNameSyncAllWait,
+			'folder-sync',
 			t("publish_all_docs"),
 			async () => this.publishAllDocuments(),
 		);
@@ -97,7 +86,7 @@ export default class YdcDocPublisher extends Plugin {
 							.setTitle(t("publish_one_doc"))
 							.setIcon("document")
 							.onClick(async () => {
-								log(t("publishing"));
+								// log(t("publishing"));
 								try {
 									await this.publishSingleDocument(target);
 								} catch (e) {
@@ -113,7 +102,7 @@ export default class YdcDocPublisher extends Plugin {
 						.setTitle(t("publish_path_docs"))
 						.setIcon("document")
 						.onClick(async () => {
-							log(t("publishing"));
+							// log(t("publishing"));
 							try {
 								await this.publishDocuments(target);
 							} catch (e) {
@@ -253,7 +242,7 @@ export default class YdcDocPublisher extends Plugin {
 
 				this.syncStatus = "syncing";
 				if (this.syncRibbon !== undefined) {
-					setIcon(this.syncRibbon, iconNameSyncAllRunning);
+					setIcon(this.syncRibbon, 'folder-up');
 					this.syncRibbon.setAttribute(
 						"aria-label",
 						t("status_batch_publishing"),
@@ -262,7 +251,7 @@ export default class YdcDocPublisher extends Plugin {
 
 
 				for (let i = 0; i < files.length; i++) {
-					log(`publishing ${files[i].name} ...`);
+					// log(`publishing ${files[i].name} ...`);
 					try {
 						await this.publishDocument(files[i], attachConfig);
 					} catch (e) {
@@ -273,7 +262,7 @@ export default class YdcDocPublisher extends Plugin {
 
 				this.syncStatus = "finish";
 				if (this.syncRibbon !== undefined) {
-					setIcon(this.syncRibbon, iconNameSyncAllWait);
+					setIcon(this.syncRibbon, 'folder-sync');
 					this.syncRibbon.setAttribute("aria-label", t("publish_path_docs"));
 				}
 				pn.hide();
@@ -315,7 +304,7 @@ export default class YdcDocPublisher extends Plugin {
 
 				this.syncStatus = "syncing";
 				if (this.syncRibbon !== undefined) {
-					setIcon(this.syncRibbon, iconNameSyncAllRunning);
+					setIcon(this.syncRibbon, 'folder-up');
 					this.syncRibbon.setAttribute(
 						"aria-label",
 						t("status_all_publishing"),
@@ -324,7 +313,7 @@ export default class YdcDocPublisher extends Plugin {
 
 
 				for (let i = 0; i < files.length; i++) {
-					log(`publishing ${files[i].name} ...`);
+					// log(`publishing ${files[i].name} ...`);
 					try {
 						await this.publishDocument(files[i], attachConfig);
 					} catch (e) {
@@ -335,7 +324,7 @@ export default class YdcDocPublisher extends Plugin {
 
 				this.syncStatus = "finish";
 				if (this.syncRibbon !== undefined) {
-					setIcon(this.syncRibbon, iconNameSyncAllWait);
+					setIcon(this.syncRibbon, 'folder-sync');
 					this.syncRibbon.setAttribute("aria-label", t("publish_all_docs"));
 				}
 				pn.hide();
@@ -367,7 +356,7 @@ export default class YdcDocPublisher extends Plugin {
 		this.removeOprLog.add({
 			target: target,
 		});
-		console.info(`handleRemove: ${target.path}, job added`);
+		// console.info(`handleRemove: ${target.path}, job added`);
 	}
 
 	publishDocument = async (file: TFile, attachConfig: AttachConfig | null) => {

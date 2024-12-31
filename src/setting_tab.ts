@@ -38,9 +38,6 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const mainDoc = containerEl.createDiv();
-		mainDoc.createEl("div", undefined, (div) => {
-			div.createEl("h3", { text: this.t("setting_main_title") });
-		});
 
 		mainDoc.createEl("h3", { text: this.t("setting_name") });
 		new Setting(mainDoc)
@@ -83,7 +80,7 @@ export default class YdcDocSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(mainDoc)
-			.setName("API Secret")
+			.setName(this.t("setting_yidong_api_secret"))
 			.setDesc(this.t("setting_yidong_api_secret_desc"))
 			.addText((text) =>
 				text

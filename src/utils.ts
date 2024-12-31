@@ -9,7 +9,7 @@ export const log =
 	};
 
 export const notify = (e: Error | undefined, msg: string) => {
-	console.log(msg);
+	// console.log(msg);
 
 	if (e) {
 		console.error(e);
@@ -25,16 +25,6 @@ export const progress = (msg: string): Notice => {
 export const showNotice = (msg: string, timeout?: number) => {
 	new Notice(msg, timeout);
 };
-
-function arrayBufferToBase64(buffer: ArrayBuffer) {
-	let binary = "";
-	const bytes = new Uint8Array(buffer);
-	const len = bytes.byteLength;
-	for (let i = 0; i < len; i++) {
-		binary += String.fromCharCode(bytes[i]);
-	}
-	return Base64.btoa(binary);
-}
 
 function extractBaseUrl(url: string) {
 	return (
@@ -97,7 +87,6 @@ const generateRandomString = (length: number = 6): string => {
 };
 
 export {
-	arrayBufferToBase64,
 	extractBaseUrl,
 	kebabize,
 	wrapAround,

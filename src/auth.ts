@@ -1,4 +1,3 @@
-import moment from "moment";
 import { toString } from "lodash";
 import { stringify as qsStringify } from "qs";
 import { sha256Hash, hmacSign, BinaryLike } from "./crypto";
@@ -128,7 +127,7 @@ export class Auth {
 		}
 
 		const date =
-			fixedHeaders["x-request-date"] || moment().format("YYYY-MM-DD HH:mm:ss");
+			fixedHeaders["x-request-date"] || window.moment().format("YYYY-MM-DD HH:mm:ss");
 		const [signedHeaders, canonicalRequest] = this.getCanonicalRequest(method, {
 			headers: fixedHeaders,
 			queries: request.queries,

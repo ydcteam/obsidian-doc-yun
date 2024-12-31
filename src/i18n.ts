@@ -1,5 +1,4 @@
 import Mustache from "mustache";
-import { moment } from "obsidian";
 
 import { LANGS } from "./langs";
 
@@ -24,8 +23,8 @@ export class I18n {
 
 	_get(key: TransItemType) {
 		let realLang = this.lang;
-		if (this.lang === "auto" && moment.locale().replace("-", "_") in LANGS) {
-			realLang = moment.locale().replace("-", "_") as LangType;
+		if (this.lang === "auto" && window.moment().locale().replace("-", "_") in LANGS) {
+			realLang = window.moment().locale().replace("-", "_") as LangType;
 		} else {
 			realLang = "zh_cn";
 		}

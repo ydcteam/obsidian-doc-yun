@@ -2,7 +2,6 @@ import { notify } from "@/utils";
 import { NetworkError } from "@/errors";
 import { Settings } from "@/setting";
 import { Auth, AuthParam } from "@/auth";
-import moment from "moment";
 import { I18n, TransItemType } from "./i18n";
 import {
 	FormDataContent,
@@ -120,7 +119,7 @@ export class Http {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
@@ -176,7 +175,7 @@ export class Http {
 			const params: AuthParam = {
 				headers: {
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
@@ -278,7 +277,7 @@ export class Http {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
@@ -340,7 +339,7 @@ export class Http {
 	 */
 	publishDocument = async (data: PublishDocumentData): Promise<boolean> => {
 		try {
-			console.info("publishDocument -> data:", data);
+			// console.info("publishDocument -> data:", data);
 
 			const form: FormDataContent = {};
 			form["content"] = [data.content];
@@ -351,7 +350,7 @@ export class Http {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
@@ -456,7 +455,7 @@ export class Http {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
@@ -529,7 +528,7 @@ export class Http {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest",
 					"request-app": this.config.settings.ydcAppId,
-					"x-request-date": moment().format("YYYY-MM-DD HH:mm:ss"),
+					"x-request-date": window.moment().format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 
